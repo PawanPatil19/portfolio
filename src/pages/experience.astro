@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_TITLE } from '../consts';
+
+const experience = [
+  {
+    date: 'Jun 2025 — Present',
+    role: 'Backend Software Engineer',
+    company: 'Venti Technologies',
+    tech: 'Python, Java, ClickHouse, RabbitMQ, REST APIs, Spark, Kubernetes',
+    desc: 'Led the design of a real-time insights platform for fleet management. Built event-driven telemetry ingestion services, reduced cloud storage costs with Apache Iceberg + Alluxio, and enabled natural-language analytics via MCP integration.',
+  },
+  {
+    date: 'Jan 2024 — May 2025',
+    role: 'Full Stack Software Engineer Intern',
+    company: 'Venti Technologies',
+    tech: 'Python, C++, Spark, TypeScript, Airflow',
+    desc: 'Improved workflow analysis accuracy, reduced API response times, and built aggregation pipelines and release-readiness dashboards. Also handled VAPT remediation for client-facing apps.',
+  },
+  {
+    date: 'May 2023 — Aug 2023',
+    role: 'Undergraduate Research Assistant',
+    company: 'NUS Smart Systems Institute',
+    tech: 'C++, Python, PostgreSQL, Swagger, Git',
+    desc: 'Optimized YOLOv8 detection for VR, built low-latency communication pipelines with WebSockets/WebRTC/Protobuf, and integrated LangChain-based interaction workflows.',
+  },
+  {
+    date: 'May 2023 — Aug 2023',
+    role: 'Student Assistant',
+    company: 'National University of Singapore',
+    tech: 'ROS, C++, Flutter',
+    desc: 'Developed ROS-based control software for a quadruped robot, implemented Flutter-to-ROS communication architecture, and integrated navigation and safety-control logic.',
+  },
+];
+
+const education = [
+  {
+    date: 'Aug 2021 — May 2025',
+    role: 'Bachelor of Computing in Computer Science',
+    company: 'National University of Singapore',
+  },
+];
+
+const skills = [
+  { category: 'Languages', items: 'Python, C++, Java, TypeScript' },
+  { category: 'Data & Infra', items: 'PostgreSQL, ClickHouse, Redis, Kafka, RabbitMQ, Alluxio, Apache Iceberg, Airflow' },
+  { category: 'Platforms', items: 'Docker, Kubernetes, Linux, Spark' },
+  { category: 'Tools & Frameworks', items: 'Next.js, REST APIs, Git, MCP tool orchestration' },
+];
+---
+
+<BaseLayout title={`Experience — ${SITE_TITLE}`} description="Professional experience, education, and technical skills.">
+  <section>
+    <h1 class="prompt">Experience</h1>
+    <p class="subtitle" style="margin-bottom: 2rem;">
+      My professional journey so far — from university research to production backend systems.
+    </p>
+  </section>
+
+  <section>
+    <p class="section-label">Work</p>
+    <div class="timeline">
+      {experience.map((item) => (
+        <div class="timeline-item">
+          <div class="timeline-date">{item.date}</div>
+          <div>
+            <div>
+              <span class="timeline-role">{item.role}</span>
+              {' @ '}
+              <span class="timeline-company">{item.company}</span>
+            </div>
+            <p class="timeline-tech">{item.tech}</p>
+            <p class="timeline-desc">{item.desc}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <hr />
+
+  <section>
+    <p class="section-label">Education</p>
+    <div class="timeline">
+      {education.map((item) => (
+        <div class="timeline-item">
+          <div class="timeline-date">{item.date}</div>
+          <div>
+            <span class="timeline-role">{item.role}</span>
+            {' @ '}
+            <span class="timeline-company">{item.company}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <hr />
+
+  <section>
+    <p class="section-label">Skills & Tools</p>
+    <div class="skills-grid">
+      {skills.map((group) => (
+        <div class="skill-group">
+          <h3>{group.category}</h3>
+          <p>{group.items}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

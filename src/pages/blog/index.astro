@@ -1,0 +1,41 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { SITE_TITLE } from '../../consts';
+
+const posts = (await getCollection('blog')).sort(
+  (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
+    b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<BaseLayout title={`Blog — ${SITE_TITLE}`} description="Notes on backend engineering, tools I use, and things I'm learning.">
+  <section>
+    <h1 class="prompt">Blog</h1>
+    <p class="subtitle" style="margin-bottom: 2rem;">
+      Notes on backend engineering, tools I use, and things I'm learning.
+      Mostly for my future self, but maybe useful to you too.
+    </p>
+  </section>
+
+  <section>
+    <div class="post-list">
+      {posts.map((post: CollectionEntry<'blog'>) => (
+        <div class="post-item">
+          <span class="post-date">
+            <FormattedDate date={post.data.pubDate} />
+          </span>
+          <div>
+            <a class="post-title" href={`/blog/${post.id}/`}>
+              {post.data.title}
+            </a>
+            <p style="font-size: 0.8rem; margin: 0.2rem 0 0; color: var(--text-muted);">
+              {post.data.description}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
