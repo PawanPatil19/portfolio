@@ -10,103 +10,68 @@ const projects = (await getCollection('projects'))
   )
   .slice(0, 3);
 
-const experience = [
-  {
-    date: 'Jun 2025 — Present',
-    role: 'Backend Software Engineer',
-    company: 'Venti',
-  },
-  {
-    date: 'Jan 2024 — May 2025',
-    role: 'Full Stack Software Engineer Intern',
-    company: 'Venti',
-  },
-  {
-    date: 'May 2023 — Aug 2023',
-    role: 'Undergraduate Research Assistant',
-    company: 'NUS Smart Systems Institute',
-  },
-  {
-    date: 'May 2023 — Aug 2023',
-    role: 'Student Assistant',
-    company: 'National University of Singapore',
-  },
-];
+const posts = (await getCollection('blog'))
+  .filter((post: CollectionEntry<'blog'>) => !post.data.draft)
+  .sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
+    b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  )
+  .slice(0, 3);
+
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <!-- Hero -->
-  <section class="hero">
-    <h1 class="prompt">Pawan Patil<span class="cursor">▌</span></h1>
-    <p class="subtitle">
-      Junior software engineer building backend systems, data platforms, and developer tooling.
-      Currently at <a href="https://www.linkedin.com/company/ventitechnologies/posts/?feedView=all" target="_blank" rel="noreferrer">Venti</a> working on real-time infrastructure for autonomous vehicles.
-    </p>
-    <p class="location">📍 Singapore · 🎓 B.Comp in Computer Science, National University of Singapore (2021–2025)</p>
-    <div class="hero-links">
-      <a href="mailto:pawanpatil663@gmail.com">email</a>
-      <a href="https://github.com/PawanPatil19" target="_blank" rel="noreferrer">github</a>
-      <a href="https://www.linkedin.com/in/pawan-kishor-patil/" target="_blank" rel="noreferrer">linkedin</a>
-      <a href="/Pawan_Resume_Backend_Software_Engineer.pdf" target="_blank">resume.pdf</a>
-    </div>
-  </section>
-
-  <hr />
-
-  <!-- Experience & Skills -->
-  <section>
-    <div class="two-col">
-      <div>
-        <p class="section-label">Experience</p>
-        <div class="timeline">
-          {experience.map((item) => (
-            <div class="timeline-item-compact">
-              <span class="timeline-role">{item.role}</span>
-              <span class="timeline-at"> @ </span>
-              <span class="timeline-company">{item.company}</span>
-              <span class="timeline-date-inline">{item.date}</span>
-            </div>
-          ))}
-        </div>
-        <a href="/experience" class="section-link">View full experience →</a>
-      </div>
-      <div>
-        <p class="section-label">Tech I work with</p>
-        <div class="tech-cloud">
-          <span class="tag">Python</span>
-          <span class="tag">C++</span>
-          <span class="tag">Java</span>
-          <span class="tag">TypeScript</span>
-          <span class="tag">PostgreSQL</span>
-          <span class="tag">ClickHouse</span>
-          <span class="tag">Redis</span>
-          <span class="tag">Kafka</span>
-          <span class="tag">RabbitMQ</span>
-          <span class="tag">Apache Iceberg</span>
-          <span class="tag">Alluxio</span>
-          <span class="tag">Spark</span>
-          <span class="tag">Airflow</span>
-          <span class="tag">Docker</span>
-          <span class="tag">Kubernetes</span>
-          <span class="tag">Linux</span>
-          <span class="tag">Next.js</span>
-          <span class="tag">REST APIs</span>
-          <span class="tag">RabbitMQ</span>
-          <span class="tag">Git</span>
-        </div>
+  <section class="hero hero-grid">
+    <div class="hero-copy">
+      <div class="availability"><span></span> available for interesting conversations</div>
+      <p class="eyebrow">backend engineer · singapore</p>
+      <h1>I build systems that stay calm when the traffic doesn’t.</h1>
+      <p class="subtitle">
+        I’m Pawan, a backend software engineer at <a href="https://www.linkedin.com/company/ventitechnologies/posts/?feedView=all" target="_blank" rel="noreferrer">Venti</a>.
+        I work on real-time data platforms for autonomous vehicles, then write down what I learn.
+      </p>
+      <div class="hero-links">
+        <a class="button-primary" href="/projects">Explore my work <span>→</span></a>
+        <a href="/blog">Read field notes</a>
+        <a href="mailto:pawanpatil663@gmail.com">Say hello</a>
       </div>
     </div>
+
+    <aside class="code-window" aria-label="Pawan's developer profile">
+      <div class="window-bar">
+        <div class="window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+        <span>pawan.ts</span>
+        <span class="window-branch">main</span>
+      </div>
+      <pre><code><span class="code-purple">const</span> pawan = &#123;
+  role: <span class="code-green">"backend_engineer"</span>,
+  focus: [
+    <span class="code-green">"distributed systems"</span>,
+    <span class="code-green">"data platforms"</span>,
+    <span class="code-green">"developer tools"</span>
+  ],
+  currentlyBuilding: <span class="code-green">"real-time infra"</span>,
+  curiosity: <span class="code-orange">Infinity</span>
+&#125;;</code></pre>
+      <div class="window-status"><span><i></i> systems operational</span><span>Singapore · SGT</span></div>
+    </aside>
   </section>
 
-  <hr />
+  <section class="signal-strip" aria-label="Quick facts">
+    <div><span class="signal-value">SG</span><span class="signal-label">building from<br />Singapore</span></div>
+    <div><span class="signal-value">04</span><span class="signal-label">engineering roles<br />across research & industry</span></div>
+    <div><span class="signal-value">{String(posts.length).padStart(2, '0')}</span><span class="signal-label">field notes<br />and counting</span></div>
+  </section>
 
-  <!-- Featured Projects -->
-  <section>
-    <p class="section-label">Projects</p>
-    <div class="project-list">
-      {projects.map((project: CollectionEntry<'projects'>) => (
+  <section class="home-section">
+    <div class="section-heading">
+      <div><p class="eyebrow">selected work</p><h2>Things I’ve shipped & studied</h2></div>
+      <a href="/projects">All projects <span>→</span></a>
+    </div>
+    <div class="project-grid">
+      {projects.map((project: CollectionEntry<'projects'>, index: number) => (
         <a class="project-card" href={`/projects/${project.id}/`}>
           <div class="card">
+            <div class="card-index">0{index + 1} <span>↗</span></div>
             <h3>{project.data.title}</h3>
             <p>{project.data.description}</p>
             <div class="project-tags">
@@ -118,8 +83,40 @@ const experience = [
         </a>
       ))}
     </div>
-    <p style="margin-top: 1rem;">
-      <a href="/projects" style="font-size: 0.85rem;">All projects →</a>
-    </p>
+  </section>
+
+  <section class="home-section writing-preview">
+    <div class="section-heading">
+      <div><p class="eyebrow">from the notebook</p><h2>Field notes, not thought leadership</h2></div>
+      <a href="/blog">Enter the blog <span>→</span></a>
+    </div>
+    <div class="notes-grid">
+      {posts.map((post: CollectionEntry<'blog'>) => (
+        <a class="note-card" href={`/blog/${post.id}/`}>
+          <div class="note-meta">
+            <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}</time>
+            <span>{post.data.tags[0] ?? 'note'}</span>
+          </div>
+          <h3>{post.data.title}</h3>
+          <p>{post.data.description}</p>
+          <span class="read-note">Read note →</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="home-section now-grid">
+    <div>
+      <p class="eyebrow">/now</p>
+      <h2>Working close to the metal,<br />thinking in systems.</h2>
+      <p>I care about software that is observable, understandable, and boring in production. The interesting part should be the problem, not the outage.</p>
+      <a href="/experience">How I got here →</a>
+    </div>
+    <div class="stack-panel">
+      <p class="stack-command"><span>$</span> cat daily_stack.txt</p>
+      <div class="tech-cloud">
+        {['Python', 'Java', 'C++', 'TypeScript', 'ClickHouse', 'PostgreSQL', 'Kafka', 'RabbitMQ', 'Spark', 'Kubernetes'].map((tech) => <span class="tag">{tech}</span>)}
+      </div>
+    </div>
   </section>
 </BaseLayout>

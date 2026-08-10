@@ -4,38 +4,47 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { SITE_TITLE } from '../../consts';
 
-const posts = (await getCollection('blog')).sort(
+const posts = (await getCollection('blog')).filter((post) => !post.data.draft).sort(
   (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
     b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 ---
 
 <BaseLayout title={`Blog — ${SITE_TITLE}`} description="Notes on backend engineering, tools I use, and things I'm learning.">
-  <section>
-    <h1 class="prompt">Blog</h1>
-    <p class="subtitle" style="margin-bottom: 2rem;">
-      Notes on backend engineering, tools I use, and things I'm learning.
-      Mostly for my future self, but maybe useful to you too.
+  <section class="blog-hero">
+    <p class="eyebrow">pawan.log / field notes</p>
+    <h1>Stories from inside<br />the machine.</h1>
+    <p class="subtitle">
+      Notes on backend engineering, useful tools, production lessons, and the occasional rabbit hole.
+      Written to make the next hard problem a little easier.
     </p>
+    <div class="blog-stats">
+      <span><strong>{String(posts.length).padStart(2, '0')}</strong> entries</span>
+      <span><strong>{new Set(posts.flatMap((post) => post.data.tags)).size}</strong> topics</span>
+      <a href="/rss.xml">RSS feed ↗</a>
+    </div>
   </section>
 
-  <section>
-    <div class="post-list">
-      {posts.map((post: CollectionEntry<'blog'>) => (
-        <div class="post-item">
-          <span class="post-date">
-            <FormattedDate date={post.data.pubDate} />
-          </span>
-          <div>
-            <a class="post-title" href={`/blog/${post.id}/`}>
-              {post.data.title}
-            </a>
-            <p style="font-size: 0.8rem; margin: 0.2rem 0 0; color: var(--text-muted);">
-              {post.data.description}
-            </p>
+  <section class="blog-index-section">
+    <div class="blog-index-bar"><span>INDEX</span><span>Newest first</span></div>
+    <div class="story-list">
+      {posts.map((post: CollectionEntry<'blog'>, index: number) => (
+        <article class="story-item">
+          <span class="story-number">{String(index + 1).padStart(2, '0')}</span>
+          <div class="story-body">
+            <div class="story-meta"><FormattedDate date={post.data.pubDate} /><span>·</span><span>{post.data.tags.join(' / ')}</span></div>
+            <h2><a href={`/blog/${post.id}/`}>{post.data.title}</a></h2>
+            <p>{post.data.description}</p>
           </div>
-        </div>
+          <a class="story-arrow" href={`/blog/${post.id}/`} aria-label={`Read ${post.data.title}`}>↗</a>
+        </article>
       ))}
     </div>
   </section>
+
+  <aside class="write-callout">
+    <span class="eyebrow">next dispatch</span>
+    <p>Currently collecting notes on observability, data systems, and the small engineering decisions that compound.</p>
+    <a href="mailto:pawanpatil663@gmail.com?subject=A story idea for your blog">Suggest a rabbit hole →</a>
+  </aside>
 </BaseLayout>

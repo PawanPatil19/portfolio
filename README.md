@@ -35,3 +35,22 @@ src/
 Static output — deploy anywhere (Vercel, Netlify, Cloudflare Pages).
 
 Set `site` in `astro.config.mjs` to `https://pawanpatil.com`.
+
+## Publish a blog post
+
+Create a Markdown file in `src/content/blog/`:
+
+```md
+---
+title: 'Your title'
+description: 'One clear sentence about the story.'
+pubDate: 'Aug 10 2026'
+tags: ['backend', 'lessons']
+draft: true
+---
+
+Start writing here.
+```
+
+Drafts stay out of the blog, RSS feed, and production build. Change `draft` to
+`false` (or remove the line) when the post is ready to publish.

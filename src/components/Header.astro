@@ -3,8 +3,9 @@ const pathname = Astro.url.pathname;
 
 const links = [
   { href: '/', label: 'home' },
-  { href: '/experience', label: 'experience' },
   { href: '/projects', label: 'projects' },
+  { href: '/blog', label: 'writing' },
+  { href: '/experience', label: 'experience' },
 ];
 ---
 
@@ -12,8 +13,18 @@ const links = [
   <div class="container">
     <a class="brand" href="/">pawan_patil</a>
     <div class="nav-right">
+      <nav class="primary-nav" aria-label="Primary navigation">
+        {links.map(({ href, label }) => (
+          <a
+            href={href}
+            aria-current={pathname === href || (href !== '/' && pathname.startsWith(href)) ? 'page' : undefined}
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
       <nav class="cmd-palette" id="cmd-palette">
-        <button class="cmd-trigger" id="cmd-trigger" aria-label="Navigation">
+        <button class="cmd-trigger" id="cmd-trigger" aria-label="Open command menu" aria-expanded="false" aria-controls="cmd-menu">
           <span class="cmd-key">⌘K</span>
           <span class="cmd-label">Navigate</span>
         </button>
@@ -44,12 +55,14 @@ const links = [
   trigger?.addEventListener('click', (e) => {
     e.stopPropagation();
     menu?.classList.toggle('open');
+    trigger.setAttribute('aria-expanded', String(menu?.classList.contains('open')));
   });
 
   // Close on outside click
   document.addEventListener('click', (e) => {
     if (!document.getElementById('cmd-palette')?.contains(e.target)) {
       menu?.classList.remove('open');
+      trigger?.setAttribute('aria-expanded', 'false');
     }
   });
 
@@ -58,9 +71,11 @@ const links = [
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
       e.preventDefault();
       menu?.classList.toggle('open');
+      trigger?.setAttribute('aria-expanded', String(menu?.classList.contains('open')));
     }
     if (e.key === 'Escape') {
       menu?.classList.remove('open');
+      trigger?.setAttribute('aria-expanded', 'false');
     }
   });
 
