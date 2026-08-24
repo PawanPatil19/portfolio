@@ -1,10 +1,11 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 const projects = (await getCollection('projects'))
-  .filter((p: CollectionEntry<'projects'>) => p.data.featured)
+  .filter((project: CollectionEntry<'projects'>) => project.data.featured)
   .sort((a: CollectionEntry<'projects'>, b: CollectionEntry<'projects'>) =>
     b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
   )
@@ -16,107 +17,70 @@ const posts = (await getCollection('blog'))
     b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
   )
   .slice(0, 3);
-
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <section class="hero hero-grid">
-    <div class="hero-copy">
-      <div class="availability"><span></span> available for interesting conversations</div>
-      <p class="eyebrow">backend engineer · singapore</p>
-      <h1>I build systems that stay calm when the traffic doesn’t.</h1>
-      <p class="subtitle">
-        I’m Pawan, a backend software engineer at <a href="https://www.linkedin.com/company/ventitechnologies/posts/?feedView=all" target="_blank" rel="noreferrer">Venti</a>.
-        I work on real-time data platforms for autonomous vehicles, then write down what I learn.
-      </p>
-      <div class="hero-links">
-        <a class="button-primary" href="/projects">Explore my work <span>→</span></a>
-        <a href="/blog">Read field notes</a>
-        <a href="mailto:pawanpatil663@gmail.com">Say hello</a>
-      </div>
-    </div>
-
-    <aside class="code-window" aria-label="Pawan's developer profile">
-      <div class="window-bar">
-        <div class="window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-        <span>pawan.ts</span>
-        <span class="window-branch">main</span>
-      </div>
-      <pre><code><span class="code-purple">const</span> pawan = &#123;
-  role: <span class="code-green">"backend_engineer"</span>,
-  focus: [
-    <span class="code-green">"distributed systems"</span>,
-    <span class="code-green">"data platforms"</span>,
-    <span class="code-green">"developer tools"</span>
-  ],
-  currentlyBuilding: <span class="code-green">"real-time infra"</span>,
-  curiosity: <span class="code-orange">Infinity</span>
-&#125;;</code></pre>
-      <div class="window-status"><span><i></i> systems operational</span><span>Singapore · SGT</span></div>
-    </aside>
+  <section class="intro">
+    <p class="quiet-code">pawan@singapore:~$ whoami</p>
+    <h1>I’m Pawan, a backend software engineer.</h1>
+    <p>
+      I build real-time data systems and developer tools at
+      <a href="https://www.linkedin.com/company/ventitechnologies/posts/?feedView=all" target="_blank" rel="noreferrer">Venti</a>,
+      where I work on infrastructure for autonomous vehicles.
+    </p>
+    <p>
+      I like reliable software, clear abstractions, and understanding why systems behave the way they do.
+      This site is where I keep my projects and notes from the things I learn along the way.
+    </p>
+    <p class="inline-links">
+      <a href="mailto:pawanpatil663@gmail.com">[Email]</a>
+      <a href="https://github.com/PawanPatil19" target="_blank" rel="noreferrer">[GitHub]</a>
+      <a href="https://www.linkedin.com/in/pawan-kishor-patil/" target="_blank" rel="noreferrer">[LinkedIn]</a>
+      <a href="/Pawan_Resume_Backend_Software_Engineer.pdf" target="_blank">[Resume]</a>
+    </p>
   </section>
 
-  <section class="signal-strip" aria-label="Quick facts">
-    <div><span class="signal-value">SG</span><span class="signal-label">building from<br />Singapore</span></div>
-    <div><span class="signal-value">04</span><span class="signal-label">engineering roles<br />across research & industry</span></div>
-    <div><span class="signal-value">{String(posts.length).padStart(2, '0')}</span><span class="signal-label">field notes<br />and counting</span></div>
-  </section>
-
-  <section class="home-section">
-    <div class="section-heading">
-      <div><p class="eyebrow">selected work</p><h2>Things I’ve shipped & studied</h2></div>
-      <a href="/projects">All projects <span>→</span></a>
+  <section class="content-section">
+    <div class="section-title-row">
+      <h2>Writing</h2>
+      <a href="/blog">All notes →</a>
     </div>
-    <div class="project-grid">
-      {projects.map((project: CollectionEntry<'projects'>, index: number) => (
-        <a class="project-card" href={`/projects/${project.id}/`}>
-          <div class="card">
-            <div class="card-index">0{index + 1} <span>↗</span></div>
-            <h3>{project.data.title}</h3>
-            <p>{project.data.description}</p>
-            <div class="project-tags">
-              {project.data.stack.slice(0, 4).map((tech: string) => (
-                <span class="tag">{tech}</span>
-              ))}
-            </div>
-          </div>
-        </a>
-      ))}
-    </div>
-  </section>
-
-  <section class="home-section writing-preview">
-    <div class="section-heading">
-      <div><p class="eyebrow">from the notebook</p><h2>Field notes, not thought leadership</h2></div>
-      <a href="/blog">Enter the blog <span>→</span></a>
-    </div>
-    <div class="notes-grid">
+    <div class="simple-list">
       {posts.map((post: CollectionEntry<'blog'>) => (
-        <a class="note-card" href={`/blog/${post.id}/`}>
-          <div class="note-meta">
-            <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}</time>
-            <span>{post.data.tags[0] ?? 'note'}</span>
+        <article class="simple-list-item">
+          <time datetime={post.data.pubDate.toISOString()}><FormattedDate date={post.data.pubDate} /></time>
+          <div>
+            <h3><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
+            <p>{post.data.description}</p>
           </div>
-          <h3>{post.data.title}</h3>
-          <p>{post.data.description}</p>
-          <span class="read-note">Read note →</span>
-        </a>
+        </article>
       ))}
     </div>
   </section>
 
-  <section class="home-section now-grid">
-    <div>
-      <p class="eyebrow">/now</p>
-      <h2>Working close to the metal,<br />thinking in systems.</h2>
-      <p>I care about software that is observable, understandable, and boring in production. The interesting part should be the problem, not the outage.</p>
-      <a href="/experience">How I got here →</a>
+  <section class="content-section">
+    <div class="section-title-row">
+      <h2>Selected projects</h2>
+      <a href="/projects">All projects →</a>
     </div>
-    <div class="stack-panel">
-      <p class="stack-command"><span>$</span> cat daily_stack.txt</p>
-      <div class="tech-cloud">
-        {['Python', 'Java', 'C++', 'TypeScript', 'ClickHouse', 'PostgreSQL', 'Kafka', 'RabbitMQ', 'Spark', 'Kubernetes'].map((tech) => <span class="tag">{tech}</span>)}
-      </div>
+    <div class="simple-list project-list-home">
+      {projects.map((project: CollectionEntry<'projects'>) => (
+        <article class="simple-list-item">
+          <span class="list-marker">{project.data.stack[0]}</span>
+          <div>
+            <h3><a href={`/projects/${project.id}/`}>{project.data.title}</a></h3>
+            <p>{project.data.description}</p>
+          </div>
+        </article>
+      ))}
     </div>
+  </section>
+
+  <section class="content-section note-section">
+    <h2>Currently</h2>
+    <p>
+      Working from Singapore, learning more about event-driven systems, storage engines, and the small
+      engineering decisions that make production software easier to operate.
+    </p>
   </section>
 </BaseLayout>

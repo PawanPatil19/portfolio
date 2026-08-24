@@ -2,97 +2,25 @@
 const pathname = Astro.url.pathname;
 
 const links = [
-  { href: '/', label: 'home' },
-  { href: '/projects', label: 'projects' },
-  { href: '/blog', label: 'writing' },
-  { href: '/experience', label: 'experience' },
+  { href: '/blog', label: 'Writing' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/experience', label: 'Experience' },
 ];
 ---
 
 <header class="site-header">
-  <div class="container">
-    <a class="brand" href="/">pawan_patil</a>
-    <div class="nav-right">
-      <nav class="primary-nav" aria-label="Primary navigation">
-        {links.map(({ href, label }) => (
-          <a
-            href={href}
-            aria-current={pathname === href || (href !== '/' && pathname.startsWith(href)) ? 'page' : undefined}
-          >
-            {label}
-          </a>
-        ))}
-      </nav>
-      <nav class="cmd-palette" id="cmd-palette">
-        <button class="cmd-trigger" id="cmd-trigger" aria-label="Open command menu" aria-expanded="false" aria-controls="cmd-menu">
-          <span class="cmd-key">⌘K</span>
-          <span class="cmd-label">Navigate</span>
-        </button>
-        <ul class="cmd-menu" id="cmd-menu">
-          {links.map(({ href, label }) => (
-            <li>
-              <a
-                href={href}
-                class:list={['cmd-item', { active: pathname === href || (href !== '/' && pathname.startsWith(href)) }]}
-              >
-                <span class="cmd-icon">→</span>
-                <span>/{label}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">◐</button>
-    </div>
+  <div class="container header-inner">
+    <a class="brand" href="/">Pawan Patil</a>
+    <nav class="primary-nav" aria-label="Primary navigation">
+      {links.map(({ href, label }) => (
+        <a
+          href={href}
+          aria-current={pathname.startsWith(href) ? 'page' : undefined}
+        >
+          {label}
+        </a>
+      ))}
+      <a href="mailto:pawanpatil663@gmail.com">Contact</a>
+    </nav>
   </div>
 </header>
-
-<script is:inline>
-  // Command palette toggle
-  const trigger = document.getElementById('cmd-trigger');
-  const menu = document.getElementById('cmd-menu');
-
-  trigger?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    menu?.classList.toggle('open');
-    trigger.setAttribute('aria-expanded', String(menu?.classList.contains('open')));
-  });
-
-  // Close on outside click
-  document.addEventListener('click', (e) => {
-    if (!document.getElementById('cmd-palette')?.contains(e.target)) {
-      menu?.classList.remove('open');
-      trigger?.setAttribute('aria-expanded', 'false');
-    }
-  });
-
-  // Keyboard shortcut: ⌘K or Ctrl+K
-  document.addEventListener('keydown', (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-      e.preventDefault();
-      menu?.classList.toggle('open');
-      trigger?.setAttribute('aria-expanded', String(menu?.classList.contains('open')));
-    }
-    if (e.key === 'Escape') {
-      menu?.classList.remove('open');
-      trigger?.setAttribute('aria-expanded', 'false');
-    }
-  });
-
-  // Theme toggle
-  const toggle = document.getElementById('theme-toggle');
-  toggle?.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme');
-    const next = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
-    toggle.textContent = next === 'dark' ? '☀' : '◐';
-  });
-
-  // Set initial icon
-  (() => {
-    const t = document.documentElement.getAttribute('data-theme');
-    const btn = document.getElementById('theme-toggle');
-    if (btn) btn.textContent = t === 'dark' ? '☀' : '◐';
-  })();
-</script>

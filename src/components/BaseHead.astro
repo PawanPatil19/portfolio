@@ -47,14 +47,3 @@ const { title, description } = Astro.props;
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
-
-<!-- Theme: default to light, respect saved preference -->
-<script is:inline>
-  const theme = (() => {
-    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-      return localStorage.getItem('theme');
-    }
-    return 'light';
-  })();
-  document.documentElement.setAttribute('data-theme', theme);
-</script>

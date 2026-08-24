@@ -15,28 +15,17 @@ const { title, description, pubDate, updatedDate, tags } = Astro.props;
       <h1>{title}</h1>
       <div class="post-meta">
         <FormattedDate date={pubDate} />
-        <span>field note</span>
         {updatedDate && (
           <span>
             (updated <FormattedDate date={updatedDate} />)
           </span>
         )}
       </div>
-      {tags?.length > 0 && (
-        <div class="project-tags" style="margin-top: 0.5rem;">
-          {tags.map((tag: string) => (
-            <span class="tag">{tag}</span>
-          ))}
-        </div>
-      )}
+      {tags?.length > 0 && <p class="item-tags">{tags.join(' · ')}</p>}
     </div>
     <div class="prose">
       <slot />
     </div>
-    <aside class="post-signoff">
-      <span class="eyebrow">EOF</span>
-      <p>Thanks for reading. I write about systems, tools, and the lessons hiding inside production incidents.</p>
-      <a href="/blog">Browse all field notes →</a>
-    </aside>
+    <p class="post-signoff"><a href="/blog">More writing →</a></p>
   </article>
 </BaseLayout>
