@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_TITLE } from '../consts';
+
+const contacts = [
+  {
+    name: 'Email',
+    value: 'pawanpatil663@gmail.com',
+    href: 'mailto:pawanpatil663@gmail.com',
+    note: 'For longer conversations, opportunities, and anything that deserves more than a short message.',
+  },
+  {
+    name: 'LinkedIn',
+    value: 'pawan-kishor-patil',
+    href: 'https://www.linkedin.com/in/pawan-kishor-patil/',
+    note: 'Work history, professional updates, and the occasional engineering post.',
+  },
+  {
+    name: 'GitHub',
+    value: 'PawanPatil19',
+    href: 'https://github.com/PawanPatil19',
+    note: 'Projects, experiments, and code I have made public.',
+  },
+  {
+    name: 'Twitter',
+    value: '@pakipatil',
+    href: 'https://x.com/pakipatil',
+    note: 'Short thoughts, things I am learning, and links I find interesting.',
+  },
+];
+---
+
+<BaseLayout title={`Contact — ${SITE_TITLE}`} description="Ways to get in touch with Pawan Patil.">
+  <header class="page-intro">
+    <h1>Contact</h1>
+    <p>
+      I’m always happy to talk about backend engineering, interesting projects, or ideas worth building.
+      Pick whichever channel works best for you.
+    </p>
+  </header>
+
+  <section class="contact-list" aria-label="Contact methods">
+    {contacts.map((contact) => (
+      <article class="contact-item">
+        <div>
+          <h2>{contact.name}</h2>
+          <a href={contact.href} target={contact.href.startsWith('http') ? '_blank' : undefined} rel={contact.href.startsWith('http') ? 'noreferrer' : undefined}>
+            {contact.value}
+          </a>
+        </div>
+        <p>{contact.note}</p>
+      </article>
+    ))}
+  </section>
+</BaseLayout>
