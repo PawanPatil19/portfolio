@@ -1,13 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap');
 
 :root {
-  --background: #fafafa;
-  --surface: #f3f3f1;
-  --text: #181818;
-  --muted: #707070;
-  --faint: #a0a0a0;
-  --line: #dededb;
-  --link: #3f5f93;
+  color-scheme: dark;
+  --background: #10110f;
+  --surface: #181a17;
+  --text: #e9e9e3;
+  --muted: #a2a49c;
+  --faint: #696c65;
+  --line: #2b2e29;
+  --link: #9fb5db;
   --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --container: 720px;
@@ -27,7 +28,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-::selection { background: #dce5f4; }
+::selection { background: #34445f; color: #ffffff; }
 
 .container {
   width: min(var(--container), calc(100% - 2.5rem));
@@ -103,7 +104,7 @@ main { min-height: calc(100vh - 190px); padding: 6rem 0 7rem; }
 
 .intro > p:not(.quiet-code):not(.inline-links) {
   max-width: 650px;
-  color: #3f3f3f;
+  color: var(--muted);
   font-family: var(--sans);
   font-size: 0.98rem;
   line-height: 1.8;
@@ -221,7 +222,7 @@ main > article { max-width: 680px; margin-inline: auto; }
 .post-header h1 { margin-bottom: 0.8rem; }
 .post-meta { display: flex; flex-wrap: wrap; gap: 0.8rem; color: var(--faint); font-size: 0.7rem; }
 .post-header > .item-tags { margin: 0.6rem 0 0; color: var(--faint); font-size: 0.68rem; text-transform: uppercase; }
-.prose { color: #303030; font-family: var(--sans); font-size: 0.98rem; line-height: 1.85; }
+.prose { color: #d5d6d0; font-family: var(--sans); font-size: 0.98rem; line-height: 1.85; }
 .prose p { margin: 0 0 1.4rem; }
 .prose h2 { margin: 3rem 0 1rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 1.1rem; }
 .prose h3 { margin: 2.1rem 0 0.8rem; font-family: var(--mono); font-size: 0.95rem; }
