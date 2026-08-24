@@ -1,19 +1,21 @@
 ---
-title: 'Game Mechanics Engine'
-description: 'Team-built iOS-style game application with a reward-based lottery algorithm and event-driven mechanics.'
-pubDate: 'Mar 12 2024'
-stack: ['Swift', 'Figma']
+title: 'TokiToki'
+description: 'A turn-based gacha RPG built in Swift around collectible characters, team strategy, and event-driven game mechanics.'
+pubDate: 'Mar 10 2025'
+stack: ['Swift', 'UIKit', 'Core Data', 'ECS']
+github: 'https://github.com/cs3217-2425/group-project-tokitoki'
 featured: false
 ---
 
-Collaborated in a team of four to design and build an iOS-style game application from scratch, applying object-oriented design, modular architecture, and maintainable code structure throughout the development lifecycle.
+TokiToki is a team-built iOS gacha RPG where players collect Tokis, customize their stats and abilities, equip them, and assemble a team for turn-based battles.
 
 ## Core contributions
 
-- Designed and implemented a reward-based lottery algorithm to drive in-game reward distribution, ensuring clear game logic, extensibility for future tuning, and a balanced player experience
-- Built an event bus system to coordinate in-game audio and visual mechanics, enabling decoupled communication between components and improving the responsiveness and maintainability of interactive game events
-- Applied software engineering principles to ensure clean separation of concerns across the codebase
+- Designed a reward-based lottery system for distributing collectible characters
+- Built an event bus to coordinate audio, visual feedback, and battle events without tightly coupling game components
+- Worked with an entity-component-system architecture, rule-based monster AI, status effects, and persistent player data
+- Applied clear separation of concerns across battle logic, UI, and data storage
 
 ## What I learned
 
-This project strengthened my understanding of event-driven architecture and how decoupled systems make codebases easier to extend and maintain.
+Building a game as a team made the value of event-driven architecture tangible: mechanics remain easier to extend when systems communicate through explicit events instead of direct dependencies.

@@ -5,7 +5,7 @@ import FormattedDate from '../components/FormattedDate.astro';
 
 type Props = CollectionEntry<'projects'>['data'];
 
-const { title, description, pubDate, stack } = Astro.props;
+const { title, description, pubDate, stack, github, live } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
@@ -21,6 +21,12 @@ const { title, description, pubDate, stack } = Astro.props;
           {stack.map((tech: string) => (
             <span class="tag">{tech}</span>
           ))}
+        </div>
+      )}
+      {(github || live) && (
+        <div class="project-links">
+          {github && <a href={github} target="_blank" rel="noreferrer">source code ↗</a>}
+          {live && <a href={live} target="_blank" rel="noreferrer">live site ↗</a>}
         </div>
       )}
     </div>

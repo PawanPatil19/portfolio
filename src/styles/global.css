@@ -248,6 +248,7 @@ main > article { max-width: 680px; margin-inline: auto; }
 .post-header { margin-bottom: 3rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); }
 .post-header h1 { margin-bottom: 0.8rem; }
 .post-meta { display: flex; flex-wrap: wrap; gap: 0.8rem; color: var(--faint); font-size: 0.7rem; }
+.project-links { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; font-size: 0.72rem; }
 .post-header > .item-tags { margin: 0.6rem 0 0; color: var(--faint); font-size: 0.68rem; text-transform: uppercase; }
 .prose { color: #d5d6d0; font-family: var(--sans); font-size: 0.98rem; line-height: 1.85; }
 .prose p { margin: 0 0 1.4rem; }
