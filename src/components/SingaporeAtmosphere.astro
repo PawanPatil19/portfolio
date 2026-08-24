@@ -2,8 +2,28 @@
   <div class="atmosphere-sky"></div>
   <div class="atmosphere-stars atmosphere-stars-far"></div>
   <div class="atmosphere-stars atmosphere-stars-near"></div>
+  <div class="atmosphere-constellation">
+    <span class="constellation-star constellation-star-a"></span>
+    <span class="constellation-star constellation-star-b"></span>
+    <span class="constellation-star constellation-star-c"></span>
+    <span class="constellation-star constellation-star-d"></span>
+    <span class="constellation-star constellation-star-e"></span>
+    <span class="constellation-star constellation-star-f"></span>
+    <span class="constellation-star constellation-star-g"></span>
+    <i class="constellation-line constellation-line-ab"></i>
+    <i class="constellation-line constellation-line-bc"></i>
+    <i class="constellation-line constellation-line-cd"></i>
+    <i class="constellation-line constellation-line-de"></i>
+    <i class="constellation-line constellation-line-df"></i>
+    <i class="constellation-line constellation-line-cg"></i>
+  </div>
   <div class="atmosphere-sun"></div>
   <div class="atmosphere-moon"></div>
+  <div class="atmosphere-birds">
+    <span class="bird-flight bird-flight-one"><i class="bird"></i></span>
+    <span class="bird-flight bird-flight-two"><i class="bird"></i></span>
+    <span class="bird-flight bird-flight-three"><i class="bird"></i></span>
+  </div>
   <div class="atmosphere-clouds atmosphere-clouds-one"></div>
   <div class="atmosphere-clouds atmosphere-clouds-two"></div>
   <div class="atmosphere-horizon"></div>
@@ -99,6 +119,9 @@
     const daylight = Math.min(sunrise, sunset);
     const golden = clamp(1 - Math.min(Math.abs(exactHour - 6.5), Math.abs(exactHour - 18.5)) / 2);
     const stars = clamp(1 - daylight * 1.4, 0, 0.72);
+    const morningIn = clamp((exactHour - 5.5) / 1.25);
+    const morningOut = clamp((11.5 - exactHour) / 1.5);
+    const birds = Math.min(morningIn, morningOut) * 0.62;
 
     root.style.setProperty('--sky-top', sky.top);
     root.style.setProperty('--sky-middle', sky.middle);
@@ -111,6 +134,8 @@
     root.style.setProperty('--sun-opacity', `${clamp(daylight + golden * 0.18)}`);
     root.style.setProperty('--moon-opacity', `${clamp(1 - daylight * 1.2, 0.12, 0.88)}`);
     root.style.setProperty('--stars-opacity', `${stars}`);
+    root.style.setProperty('--constellation-opacity', `${clamp(stars * 0.85, 0, 0.58)}`);
+    root.style.setProperty('--birds-opacity', `${birds}`);
     root.style.setProperty('--cloud-opacity', `${0.045 + daylight * 0.08}`);
     root.style.setProperty('--horizon-opacity', `${0.08 + golden * 0.18}`);
 
@@ -142,6 +167,8 @@
     --sun-opacity: 0;
     --moon-opacity: 0.75;
     --stars-opacity: 0.65;
+    --constellation-opacity: 0.52;
+    --birds-opacity: 0;
     --cloud-opacity: 0.05;
     --horizon-opacity: 0.08;
   }
@@ -195,6 +222,55 @@
     animation: stars-breathe 5s ease-in-out 1.5s infinite alternate-reverse;
   }
 
+  .atmosphere-constellation {
+    position: absolute;
+    top: 10%;
+    right: 9%;
+    width: clamp(9rem, 18vw, 13rem);
+    height: clamp(7rem, 14vw, 10rem);
+    opacity: var(--constellation-opacity);
+    transform: rotate(-6deg);
+    transition: opacity 2s linear;
+    animation: constellation-drift 36s ease-in-out infinite alternate;
+  }
+
+  .constellation-star,
+  .constellation-line {
+    position: absolute;
+    display: block;
+  }
+
+  .constellation-star {
+    width: 0.22rem;
+    height: 0.22rem;
+    border-radius: 50%;
+    background: rgba(226, 237, 255, 0.92);
+    box-shadow: 0 0 0.55rem rgba(186, 211, 255, 0.72);
+    animation: constellation-pulse 4.8s ease-in-out infinite alternate;
+  }
+
+  .constellation-star:nth-child(even) { animation-delay: -2.2s; }
+  .constellation-star-a { top: 20%; left: 15%; }
+  .constellation-star-b { top: 42%; left: 38%; }
+  .constellation-star-c { top: 60%; left: 50%; }
+  .constellation-star-d { top: 54%; left: 65%; }
+  .constellation-star-e { top: 35%; left: 82%; }
+  .constellation-star-f { top: 85%; left: 72%; }
+  .constellation-star-g { top: 88%; left: 36%; }
+
+  .constellation-line {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(185, 207, 238, 0.12), rgba(185, 207, 238, 0.42), rgba(185, 207, 238, 0.12));
+    transform-origin: left center;
+  }
+
+  .constellation-line-ab { top: 21%; left: 16%; width: 32%; transform: rotate(36deg); }
+  .constellation-line-bc { top: 43%; left: 39%; width: 23%; transform: rotate(42deg); }
+  .constellation-line-cd { top: 61%; left: 51%; width: 16%; transform: rotate(-21deg); }
+  .constellation-line-de { top: 55%; left: 66%; width: 24%; transform: rotate(-39deg); }
+  .constellation-line-df { top: 56%; left: 66%; width: 34%; transform: rotate(68deg); }
+  .constellation-line-cg { top: 62%; left: 50%; width: 31%; transform: rotate(132deg); }
+
   .atmosphere-sun,
   .atmosphere-moon {
     position: absolute;
@@ -236,6 +312,52 @@
     box-shadow: 0 0 1.2rem rgba(196,218,234,.3);
     content: '';
   }
+
+  .atmosphere-birds {
+    position: absolute;
+    inset: 0;
+    opacity: var(--birds-opacity);
+    transition: opacity 2s linear;
+  }
+
+  .bird-flight {
+    position: absolute;
+    left: -4rem;
+    display: block;
+    width: 2rem;
+    height: 0.8rem;
+    animation: bird-crossing 52s linear infinite;
+  }
+
+  .bird-flight-one { top: 17%; animation-delay: -8s; }
+  .bird-flight-two { top: 23%; animation-delay: -31s; animation-duration: 64s; transform: scale(0.72); }
+  .bird-flight-three { top: 12%; animation-delay: -46s; animation-duration: 78s; transform: scale(0.52); }
+
+  .bird,
+  .bird::before,
+  .bird::after {
+    position: absolute;
+    display: block;
+  }
+
+  .bird {
+    inset: 0;
+  }
+
+  .bird::before,
+  .bird::after {
+    top: 0.28rem;
+    width: 1.05rem;
+    height: 0.5rem;
+    border-top: 1.5px solid rgba(5, 8, 11, 0.8);
+    border-radius: 50% 50% 0 0;
+    content: '';
+    transform-origin: center top;
+    animation: bird-flap 1.15s ease-in-out infinite alternate;
+  }
+
+  .bird::before { left: 0; transform: rotate(12deg); }
+  .bird::after { right: 0; transform: rotate(-12deg); animation-delay: -0.55s; }
 
   .atmosphere-clouds {
     position: absolute;
@@ -285,14 +407,41 @@
     to { filter: brightness(1.18); }
   }
 
+  @keyframes constellation-drift {
+    from { transform: rotate(-6deg) translate3d(0, 0, 0); }
+    to { transform: rotate(-5deg) translate3d(0.35rem, 0.18rem, 0); }
+  }
+
+  @keyframes constellation-pulse {
+    from { opacity: 0.55; transform: scale(0.78); }
+    to { opacity: 1; transform: scale(1.12); }
+  }
+
+  @keyframes bird-crossing {
+    0% { translate: -5vw 0; }
+    45% { translate: 58vw 1.2rem; }
+    100% { translate: 115vw -0.6rem; }
+  }
+
+  @keyframes bird-flap {
+    from { rotate: -8deg; }
+    to { rotate: 22deg; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .atmosphere-stars,
-    .atmosphere-clouds { animation: none; }
+    .atmosphere-clouds,
+    .atmosphere-constellation,
+    .constellation-star { animation: none; }
+
+    .atmosphere-birds { display: none; }
 
     .atmosphere-sky,
     .atmosphere-stars,
+    .atmosphere-constellation,
     .atmosphere-sun,
     .atmosphere-moon,
+    .atmosphere-birds,
     .atmosphere-clouds,
     .atmosphere-horizon,
     .atmosphere-veil { transition: none; }
