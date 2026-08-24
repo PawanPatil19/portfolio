@@ -1,33 +1,10 @@
 ---
-import { type CollectionEntry, getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
 import { SITE_TITLE } from '../../consts';
-
-const posts = (await getCollection('blog'))
-  .filter((post) => !post.data.draft)
-  .sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
-    b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-  );
 ---
 
-<BaseLayout title={`Writing — ${SITE_TITLE}`} description="Notes on backend engineering, tools I use, and things I'm learning.">
+<BaseLayout title={`Writing — ${SITE_TITLE}`} description="Writing by Pawan Patil.">
   <header class="page-intro">
     <h1>Writing</h1>
-    <p>Notes on backend engineering, tools I use, and things I’m learning. Mostly written for my future self.</p>
-    <a href="/rss.xml">[RSS feed]</a>
   </header>
-
-  <section class="simple-list writing-list" aria-label="All posts">
-    {posts.map((post: CollectionEntry<'blog'>) => (
-      <article class="simple-list-item">
-        <time datetime={post.data.pubDate.toISOString()}><FormattedDate date={post.data.pubDate} /></time>
-        <div>
-          <h2><a href={`/blog/${post.id}/`}>{post.data.title}</a></h2>
-          <p>{post.data.description}</p>
-          <p class="item-tags">{post.data.tags.join(' · ')}</p>
-        </div>
-      </article>
-    ))}
-  </section>
 </BaseLayout>

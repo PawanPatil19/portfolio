@@ -1,7 +1,6 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import FormattedDate from '../components/FormattedDate.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 const projects = (await getCollection('projects'))
@@ -11,12 +10,6 @@ const projects = (await getCollection('projects'))
   )
   .slice(0, 3);
 
-const posts = (await getCollection('blog'))
-  .filter((post: CollectionEntry<'blog'>) => !post.data.draft)
-  .sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
-    b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-  )
-  .slice(0, 3);
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
@@ -38,24 +31,6 @@ const posts = (await getCollection('blog'))
       <a href="https://www.linkedin.com/in/pawan-kishor-patil/" target="_blank" rel="noreferrer">[LinkedIn]</a>
       <a href="/Pawan_Resume_Backend_Software_Engineer.pdf" target="_blank">[Resume]</a>
     </p>
-  </section>
-
-  <section class="content-section">
-    <div class="section-title-row">
-      <h2>Writing</h2>
-      <a href="/blog">All notes →</a>
-    </div>
-    <div class="simple-list">
-      {posts.map((post: CollectionEntry<'blog'>) => (
-        <article class="simple-list-item">
-          <time datetime={post.data.pubDate.toISOString()}><FormattedDate date={post.data.pubDate} /></time>
-          <div>
-            <h3><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
-            <p>{post.data.description}</p>
-          </div>
-        </article>
-      ))}
-    </div>
   </section>
 
   <section class="content-section">
