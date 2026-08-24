@@ -1,0 +1,197 @@
+<aside class="singapore-signal" data-singapore-signal aria-label="Live Singapore time">
+  <div class="signal-meta">
+    <span>Singapore signal</span>
+    <time data-signal-time>SGT</time>
+  </div>
+
+  <div class="signal-field" aria-hidden="true">
+    <div class="signal-horizon"></div>
+    <span class="signal-point" data-signal-point></span>
+    <div class="signal-ticks">
+      <span>00</span>
+      <span>06</span>
+      <span>12</span>
+      <span>18</span>
+      <span>24</span>
+    </div>
+  </div>
+
+  <p class="signal-caption" data-signal-caption>local time, rendered as light</p>
+</aside>
+
+<script>
+  const formatter = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Singapore',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  });
+
+  const messages = [
+    { from: 0, to: 5, text: 'night shift · the city is quiet, the systems are not' },
+    { from: 5, to: 8, text: 'first light · before the traffic starts moving' },
+    { from: 8, to: 12, text: 'morning build · the day is taking shape' },
+    { from: 12, to: 17, text: 'peak load · singapore at full throughput' },
+    { from: 17, to: 20, text: 'golden hour · the city changes pace' },
+    { from: 20, to: 24, text: 'after hours · quieter streets, louder ideas' },
+  ];
+
+  document.querySelectorAll<HTMLElement>('[data-singapore-signal]').forEach((signal) => {
+    const time = signal.querySelector<HTMLTimeElement>('[data-signal-time]');
+    const caption = signal.querySelector<HTMLElement>('[data-signal-caption]');
+
+    if (!time || !caption) return;
+
+    const updateSignal = () => {
+      const now = new Date();
+      const parts = Object.fromEntries(
+        formatter.formatToParts(now)
+          .filter(({ type }) => type !== 'literal')
+          .map(({ type, value }) => [type, value])
+      );
+
+      const hour = Number(parts.hour);
+      const minute = Number(parts.minute);
+      const second = Number(parts.second);
+      const dayProgress = (hour * 3600 + minute * 60 + second) / 86400;
+      const altitude = Math.sin((dayProgress - 0.25) * Math.PI * 2);
+      const x = dayProgress * 100;
+      const y = 48 + altitude * 35;
+      const isDaylight = hour >= 7 && hour < 19;
+      const isGolden = (hour >= 5 && hour < 8) || (hour >= 17 && hour < 20);
+
+      signal.style.setProperty('--signal-x', `${x}%`);
+      signal.style.setProperty('--signal-y', `${y}%`);
+      signal.dataset.phase = isGolden ? 'golden' : isDaylight ? 'day' : 'night';
+
+      time.textContent = `${parts.hour}:${parts.minute}:${parts.second} SGT`;
+      time.dateTime = now.toISOString();
+      caption.textContent = messages.find(({ from, to }) => hour >= from && hour < to)?.text
+        ?? 'local time, rendered as light';
+    };
+
+    updateSignal();
+    window.setInterval(updateSignal, 1000);
+  });
+</script>
+
+<style>
+  .singapore-signal {
+    --signal-x: 50%;
+    --signal-y: 50%;
+    --signal-color: #9fb5db;
+    --signal-glow: rgba(159, 181, 219, 0.16);
+    margin-top: 3.5rem;
+  }
+
+  .singapore-signal[data-phase='day'] {
+    --signal-color: #ddd6b5;
+    --signal-glow: rgba(221, 214, 181, 0.14);
+  }
+
+  .singapore-signal[data-phase='golden'] {
+    --signal-color: #d1a07f;
+    --signal-glow: rgba(209, 160, 127, 0.18);
+  }
+
+  .signal-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--faint);
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .signal-field {
+    position: relative;
+    height: 6rem;
+    margin-top: 0.45rem;
+    overflow: hidden;
+    background: radial-gradient(
+      circle at var(--signal-x) calc(100% - var(--signal-y)),
+      var(--signal-glow),
+      transparent 18%
+    );
+  }
+
+  .signal-horizon {
+    position: absolute;
+    right: 0;
+    bottom: 48%;
+    left: 0;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .signal-horizon::after {
+    position: absolute;
+    top: -1px;
+    right: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--line) 50%, transparent);
+    content: '';
+    opacity: 0.35;
+  }
+
+  .signal-point {
+    position: absolute;
+    left: var(--signal-x);
+    bottom: var(--signal-y);
+    width: 0.38rem;
+    height: 0.38rem;
+    border-radius: 50%;
+    background: var(--signal-color);
+    box-shadow: 0 0 0.8rem 0.24rem var(--signal-glow);
+    transform: translate(-50%, 50%);
+    transition: background-color 1.2s ease, box-shadow 1.2s ease;
+  }
+
+  .signal-point::after {
+    position: absolute;
+    inset: -0.32rem;
+    border: 1px solid var(--signal-color);
+    border-radius: inherit;
+    content: '';
+    opacity: 0.18;
+  }
+
+  .signal-ticks {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    color: var(--faint);
+    font-size: 0.54rem;
+  }
+
+  .signal-ticks span {
+    position: relative;
+  }
+
+  .signal-ticks span::before {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    width: 1px;
+    height: 0.35rem;
+    background: var(--line);
+    content: '';
+  }
+
+  .signal-caption {
+    margin: 0.55rem 0 0;
+    color: var(--faint);
+    font-size: 0.64rem;
+    text-align: right;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .signal-point { transition: none; }
+  }
+</style>
