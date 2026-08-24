@@ -28,6 +28,13 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+body > .site-header,
+body > main,
+body > .site-footer {
+  position: relative;
+  z-index: 1;
+}
+
 ::selection { background: #34445f; color: #ffffff; }
 
 .container {
@@ -59,6 +66,9 @@ h3 { font-size: 0.92rem; }
 
 .site-header {
   border-bottom: 1px solid var(--line);
+  background: rgba(16, 17, 15, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .header-inner {
@@ -264,7 +274,12 @@ main > article { max-width: 680px; margin-inline: auto; }
 .prose img { max-width: 100%; }
 .post-signoff { margin-top: 4rem; padding-top: 1.2rem; border-top: 1px solid var(--line); font-size: 0.75rem; }
 
-.site-footer { border-top: 1px solid var(--line); }
+.site-footer {
+  border-top: 1px solid var(--line);
+  background: rgba(16, 17, 15, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
 .footer-inner { display: flex; justify-content: space-between; gap: 1rem; padding: 2rem 0; }
 .footer-inner p { margin: 0; color: var(--faint); font-size: 0.68rem; }
 .footer-inner nav { display: flex; flex-wrap: wrap; gap: 1rem; }

@@ -1,0 +1,300 @@
+<div class="singapore-atmosphere" aria-hidden="true">
+  <div class="atmosphere-sky"></div>
+  <div class="atmosphere-stars atmosphere-stars-far"></div>
+  <div class="atmosphere-stars atmosphere-stars-near"></div>
+  <div class="atmosphere-sun"></div>
+  <div class="atmosphere-moon"></div>
+  <div class="atmosphere-clouds atmosphere-clouds-one"></div>
+  <div class="atmosphere-clouds atmosphere-clouds-two"></div>
+  <div class="atmosphere-horizon"></div>
+  <div class="atmosphere-veil"></div>
+</div>
+
+<script>
+  const root = document.documentElement;
+  const singaporeClock = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Singapore',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  });
+
+  const skyStops = [
+    { at: 0, top: '#03050b', middle: '#08101d', bottom: '#171522', veil: 0.3 },
+    { at: 4.5, top: '#070b17', middle: '#171a31', bottom: '#51313e', veil: 0.36 },
+    { at: 6.5, top: '#24364d', middle: '#a75e55', bottom: '#e7a468', veil: 0.58 },
+    { at: 8, top: '#315d7d', middle: '#7597ad', bottom: '#d8b98f', veil: 0.65 },
+    { at: 12, top: '#21638f', middle: '#65a0c1', bottom: '#c8c5ad', veil: 0.68 },
+    { at: 16.5, top: '#2e6280', middle: '#7895a3', bottom: '#d6aa78', veil: 0.64 },
+    { at: 18.5, top: '#252b48', middle: '#8d4f59', bottom: '#dd845e', veil: 0.52 },
+    { at: 20, top: '#0b1020', middle: '#25213a', bottom: '#643b48', veil: 0.4 },
+    { at: 24, top: '#03050b', middle: '#08101d', bottom: '#171522', veil: 0.3 },
+  ];
+
+  const signalMessages = [
+    { from: 0, to: 5, text: 'night shift · the city is quiet, the systems are not' },
+    { from: 5, to: 8, text: 'first light · before the traffic starts moving' },
+    { from: 8, to: 12, text: 'morning build · the day is taking shape' },
+    { from: 12, to: 17, text: 'peak load · singapore at full throughput' },
+    { from: 17, to: 20, text: 'golden hour · the city changes pace' },
+    { from: 20, to: 24, text: 'after hours · quieter streets, louder ideas' },
+  ];
+
+  const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+
+  const hexToRgb = (hex: string) => {
+    const value = Number.parseInt(hex.slice(1), 16);
+    return [(value >> 16) & 255, (value >> 8) & 255, value & 255];
+  };
+
+  const mix = (from: string, to: string, amount: number) => {
+    const start = hexToRgb(from);
+    const end = hexToRgb(to);
+    const channel = (index: number) => Math.round(start[index] + (end[index] - start[index]) * amount);
+    return `rgb(${channel(0)} ${channel(1)} ${channel(2)})`;
+  };
+
+  const interpolateSky = (hour: number) => {
+    const endIndex = skyStops.findIndex(({ at }) => at >= hour);
+    const end = skyStops[Math.max(1, endIndex)];
+    const start = skyStops[Math.max(0, endIndex - 1)];
+    const progress = (hour - start.at) / (end.at - start.at);
+
+    return {
+      top: mix(start.top, end.top, progress),
+      middle: mix(start.middle, end.middle, progress),
+      bottom: mix(start.bottom, end.bottom, progress),
+      veil: start.veil + (end.veil - start.veil) * progress,
+    };
+  };
+
+  const celestialPosition = (progress: number) => {
+    const altitude = Math.sin((progress - 0.25) * Math.PI * 2);
+    return {
+      x: progress * 100,
+      y: 76 - Math.max(-0.15, altitude) * 58,
+    };
+  };
+
+  const updateAtmosphere = () => {
+    const now = new Date();
+    const parts = Object.fromEntries(
+      singaporeClock.formatToParts(now)
+        .filter(({ type }) => type !== 'literal')
+        .map(({ type, value }) => [type, value])
+    );
+
+    const hour = Number(parts.hour);
+    const minute = Number(parts.minute);
+    const second = Number(parts.second);
+    const exactHour = hour + minute / 60 + second / 3600;
+    const dayProgress = exactHour / 24;
+    const moonProgress = (dayProgress + 0.5) % 1;
+    const sun = celestialPosition(dayProgress);
+    const moon = celestialPosition(moonProgress);
+    const sky = interpolateSky(exactHour);
+    const sunrise = clamp((exactHour - 5.5) / 1.25);
+    const sunset = clamp((19.5 - exactHour) / 1.25);
+    const daylight = Math.min(sunrise, sunset);
+    const golden = clamp(1 - Math.min(Math.abs(exactHour - 6.5), Math.abs(exactHour - 18.5)) / 2);
+    const stars = clamp(1 - daylight * 1.4, 0, 0.72);
+
+    root.style.setProperty('--sky-top', sky.top);
+    root.style.setProperty('--sky-middle', sky.middle);
+    root.style.setProperty('--sky-bottom', sky.bottom);
+    root.style.setProperty('--sky-veil', `rgba(7, 9, 10, ${sky.veil.toFixed(3)})`);
+    root.style.setProperty('--sun-x', `${sun.x}%`);
+    root.style.setProperty('--sun-y', `${sun.y}%`);
+    root.style.setProperty('--moon-x', `${moon.x}%`);
+    root.style.setProperty('--moon-y', `${moon.y}%`);
+    root.style.setProperty('--sun-opacity', `${clamp(daylight + golden * 0.18)}`);
+    root.style.setProperty('--moon-opacity', `${clamp(1 - daylight * 1.2, 0.12, 0.88)}`);
+    root.style.setProperty('--stars-opacity', `${stars}`);
+    root.style.setProperty('--cloud-opacity', `${0.045 + daylight * 0.08}`);
+    root.style.setProperty('--horizon-opacity', `${0.08 + golden * 0.18}`);
+
+    document.querySelectorAll<HTMLTimeElement>('[data-signal-time]').forEach((time) => {
+      time.textContent = `${parts.hour}:${parts.minute}:${parts.second} SGT`;
+      time.dateTime = now.toISOString();
+    });
+
+    const message = signalMessages.find(({ from, to }) => hour >= from && hour < to)?.text;
+    document.querySelectorAll<HTMLElement>('[data-signal-caption]').forEach((caption) => {
+      caption.textContent = message ?? 'local time, rendered as atmosphere';
+    });
+  };
+
+  updateAtmosphere();
+  window.setInterval(updateAtmosphere, 1000);
+</script>
+
+<style>
+  :global(:root) {
+    --sky-top: #03050b;
+    --sky-middle: #08101d;
+    --sky-bottom: #171522;
+    --sky-veil: rgba(7, 9, 10, 0.3);
+    --sun-x: 50%;
+    --sun-y: 18%;
+    --moon-x: 8%;
+    --moon-y: 20%;
+    --sun-opacity: 0;
+    --moon-opacity: 0.75;
+    --stars-opacity: 0.65;
+    --cloud-opacity: 0.05;
+    --horizon-opacity: 0.08;
+  }
+
+  .singapore-atmosphere {
+    position: fixed;
+    z-index: 0;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .atmosphere-sky,
+  .atmosphere-stars,
+  .atmosphere-horizon,
+  .atmosphere-veil {
+    position: absolute;
+    inset: 0;
+  }
+
+  .atmosphere-sky {
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-middle) 46%, var(--sky-bottom) 78%, #10110f 115%);
+    transition: background 2s linear;
+  }
+
+  .atmosphere-stars {
+    opacity: var(--stars-opacity);
+    transition: opacity 2s linear;
+  }
+
+  .atmosphere-stars-far {
+    background-image:
+      radial-gradient(circle at 7% 12%, rgba(255,255,255,.75) 0 1px, transparent 1.4px),
+      radial-gradient(circle at 17% 28%, rgba(255,255,255,.46) 0 1px, transparent 1.3px),
+      radial-gradient(circle at 29% 9%, rgba(255,255,255,.58) 0 1px, transparent 1.4px),
+      radial-gradient(circle at 42% 24%, rgba(255,255,255,.35) 0 1px, transparent 1.3px),
+      radial-gradient(circle at 58% 11%, rgba(255,255,255,.7) 0 1px, transparent 1.4px),
+      radial-gradient(circle at 71% 31%, rgba(255,255,255,.42) 0 1px, transparent 1.3px),
+      radial-gradient(circle at 84% 8%, rgba(255,255,255,.55) 0 1px, transparent 1.4px),
+      radial-gradient(circle at 94% 23%, rgba(255,255,255,.38) 0 1px, transparent 1.3px);
+    animation: stars-breathe 7s ease-in-out infinite alternate;
+  }
+
+  .atmosphere-stars-near {
+    background-image:
+      radial-gradient(circle at 12% 39%, rgba(214,228,255,.7) 0 1px, transparent 1.6px),
+      radial-gradient(circle at 35% 18%, rgba(255,244,214,.78) 0 1px, transparent 1.7px),
+      radial-gradient(circle at 49% 37%, rgba(255,255,255,.62) 0 1px, transparent 1.6px),
+      radial-gradient(circle at 67% 17%, rgba(214,228,255,.72) 0 1px, transparent 1.7px),
+      radial-gradient(circle at 88% 36%, rgba(255,244,214,.66) 0 1px, transparent 1.6px);
+    animation: stars-breathe 5s ease-in-out 1.5s infinite alternate-reverse;
+  }
+
+  .atmosphere-sun,
+  .atmosphere-moon {
+    position: absolute;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: left 2s linear, top 2s linear, opacity 2s linear;
+  }
+
+  .atmosphere-sun {
+    top: var(--sun-y);
+    left: var(--sun-x);
+    width: 18rem;
+    height: 18rem;
+    background: radial-gradient(circle, rgba(255,251,225,.98) 0 3%, rgba(255,211,137,.42) 4%, rgba(255,181,96,.16) 18%, transparent 68%);
+    opacity: var(--sun-opacity);
+    filter: blur(0.2px);
+  }
+
+  .atmosphere-moon {
+    top: var(--moon-y);
+    left: var(--moon-x);
+    width: 10rem;
+    height: 10rem;
+    background: radial-gradient(circle, rgba(214,228,240,.72) 0 6%, rgba(147,176,201,.2) 7%, rgba(105,137,173,.08) 25%, transparent 70%);
+    opacity: var(--moon-opacity);
+  }
+
+  .atmosphere-moon::before {
+    position: absolute;
+    top: 44%;
+    left: 44%;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 35% 30%, #e0e7eb 0 18%, transparent 20%),
+      radial-gradient(circle at 68% 62%, rgba(104,125,139,.35) 0 9%, transparent 11%),
+      #bdcbd3;
+    box-shadow: 0 0 1.2rem rgba(196,218,234,.3);
+    content: '';
+  }
+
+  .atmosphere-clouds {
+    position: absolute;
+    right: -25%;
+    left: -25%;
+    height: 15%;
+    opacity: var(--cloud-opacity);
+    filter: blur(18px);
+    transition: opacity 2s linear;
+  }
+
+  .atmosphere-clouds-one {
+    top: 22%;
+    background: radial-gradient(ellipse at 35% 50%, white 0 9%, transparent 28%), radial-gradient(ellipse at 72% 45%, white 0 7%, transparent 25%);
+    animation: cloud-drift 95s linear infinite;
+  }
+
+  .atmosphere-clouds-two {
+    top: 48%;
+    background: radial-gradient(ellipse at 22% 50%, white 0 8%, transparent 25%), radial-gradient(ellipse at 61% 48%, white 0 10%, transparent 30%);
+    animation: cloud-drift 140s linear -60s infinite reverse;
+  }
+
+  .atmosphere-horizon {
+    top: 55%;
+    height: 35%;
+    background: radial-gradient(ellipse at 50% 100%, rgba(255,174,108,.5), transparent 58%);
+    opacity: var(--horizon-opacity);
+    filter: blur(20px);
+    transition: opacity 2s linear;
+  }
+
+  .atmosphere-veil {
+    background:
+      linear-gradient(180deg, var(--sky-veil), rgba(10,12,12,.62) 60%, rgba(16,17,15,.94) 100%),
+      radial-gradient(circle at 50% 12%, transparent 0, rgba(4,5,5,.18) 78%);
+    transition: background 2s linear;
+  }
+
+  @keyframes cloud-drift {
+    from { transform: translate3d(-8%, 0, 0); }
+    to { transform: translate3d(8%, 0, 0); }
+  }
+
+  @keyframes stars-breathe {
+    from { filter: brightness(0.72); }
+    to { filter: brightness(1.18); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .atmosphere-stars,
+    .atmosphere-clouds { animation: none; }
+
+    .atmosphere-sky,
+    .atmosphere-stars,
+    .atmosphere-sun,
+    .atmosphere-moon,
+    .atmosphere-clouds,
+    .atmosphere-horizon,
+    .atmosphere-veil { transition: none; }
+  }
+</style>
