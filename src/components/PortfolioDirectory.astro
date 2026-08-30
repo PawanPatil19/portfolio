@@ -1,0 +1,447 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+}
+
+const { projects } = Astro.props;
+const shellProjects = projects.map((project) => project.id);
+---
+
+<section class="filesystem" aria-labelledby="filesystem-title" data-shell-projects={JSON.stringify(shellProjects)}>
+  <div class="filesystem-heading">
+    <div>
+      <p class="eyebrow">~/portfolio</p>
+      <h2 id="filesystem-title"><span class="folder-icon" aria-hidden="true"></span>pawan/</h2>
+    </div>
+    <p class="filesystem-note">A small filesystem of my work and life.</p>
+  </div>
+
+  <div class="directory-group">
+    <div class="group-heading"><span>01</span><h3>identity</h3></div>
+    <div class="tree">
+      <a class="tree-row" href="/" aria-label="About Pawan">
+        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span class="entry-chip chip-mint">about.md</span></span>
+        <span class="entry-description">backend engineer, based in Singapore</span>
+      </a>
+      <div class="tree-row">
+        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span class="entry-chip chip-stone">now.md</span></span>
+        <span class="entry-description">building reliable real-time systems</span>
+      </div>
+      <a class="tree-row" href="/Pawan_Resume_Backend_Software_Engineer.pdf" target="_blank">
+        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span class="entry-chip chip-amber">resume.pdf</span></span>
+        <span class="entry-description">experience, skills, and education <span aria-hidden="true">↗</span></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="directory-group">
+    <div class="group-heading"><span>02</span><h3>work</h3></div>
+    <div class="tree">
+      <a class="tree-row" href="/experience">
+        <span class="tree-entry"><span class="folder-icon small" aria-hidden="true"></span><span class="entry-chip chip-violet">experience/</span></span>
+        <span class="entry-description">the systems I have helped build</span>
+      </a>
+      <a class="tree-row nested" href="/experience">
+        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span>venti/</span></span>
+        <span class="entry-description">infrastructure for autonomous vehicles</span>
+      </a>
+      <a class="tree-row nested" href="/experience">
+        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span>nus/</span></span>
+        <span class="entry-description">robotics, vision, and real-time software</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="directory-group">
+    <div class="group-heading"><span>03</span><h3>selected work</h3></div>
+    <div class="tree">
+      <a class="tree-row" href="/projects">
+        <span class="tree-entry"><span class="folder-icon small blue" aria-hidden="true"></span><span class="entry-chip chip-blue">projects/</span></span>
+        <span class="entry-description">experiments, tools, and shipped software</span>
+      </a>
+      {projects.map((project) => (
+        <a class="tree-row nested project-row" href={`/projects/${project.id}/`}>
+          <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span>{project.id}/</span></span>
+          <span class="entry-description">{project.data.description}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <div class="directory-group">
+    <div class="group-heading"><span>04</span><h3>edges</h3></div>
+    <div class="tree">
+      <a class="tree-row" href="/blog">
+        <span class="tree-entry"><span class="folder-icon small teal" aria-hidden="true"></span><span class="entry-chip chip-teal">writing/</span></span>
+        <span class="entry-description">empty for now — stories will live here</span>
+      </a>
+      <a class="tree-row" href="/contact">
+        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span class="entry-chip chip-coral">contact.json</span></span>
+        <span class="entry-description">GitHub, LinkedIn, X, and email</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="shell" data-shell>
+    <div class="shell-bar">
+      <span><i aria-hidden="true"></i>interactive shell</span>
+      <span>Singapore · online</span>
+    </div>
+    <div class="shell-output" data-shell-output aria-live="polite">
+      <p>portfolio mounted. Type <b>help</b> or try <b>ls</b>.</p>
+    </div>
+    <form class="shell-prompt" data-shell-form autocomplete="off">
+      <label class="sr-only" for="portfolio-command">Portfolio command</label>
+      <span aria-hidden="true">pawan@singapore:~/pawan$</span>
+      <input id="portfolio-command" data-shell-input type="text" inputmode="text" spellcheck="false" aria-describedby="shell-hint" />
+      <span class="input-cursor" aria-hidden="true"></span>
+    </form>
+    <p class="shell-hint" id="shell-hint">↑↓ history · tab completes · try “ls resume”</p>
+  </div>
+</section>
+
+<script>
+  const filesystem = document.querySelector<HTMLElement>('.filesystem');
+  const shell = filesystem?.querySelector<HTMLElement>('[data-shell]');
+  const form = filesystem?.querySelector<HTMLFormElement>('[data-shell-form]');
+  const input = filesystem?.querySelector<HTMLInputElement>('[data-shell-input]');
+  const output = filesystem?.querySelector<HTMLElement>('[data-shell-output]');
+
+  if (filesystem && shell && form && input && output) {
+    const projects = JSON.parse(filesystem.dataset.shellProjects || '[]') as string[];
+    const history: string[] = [];
+    let historyIndex = 0;
+    const commands = ['help', 'ls', 'pwd', 'whoami', 'cat', 'cd', 'open', 'clear', 'history'];
+    const targets = ['about', 'now', 'experience', 'projects', 'writing', 'blog', 'resume', 'contact'];
+    const routes: Record<string, string> = {
+      experience: '/experience',
+      projects: '/projects',
+      writing: '/blog',
+      blog: '/blog',
+      resume: '/Pawan_Resume_Backend_Software_Engineer.pdf',
+      contact: '/contact',
+    };
+
+    const write = (text: string, kind = '') => {
+      const line = document.createElement('p');
+      line.textContent = text;
+      if (kind) line.className = kind;
+      output.append(line);
+      output.scrollTop = output.scrollHeight;
+    };
+
+    const navigate = (target: string) => {
+      const route = routes[target];
+      if (!route) return false;
+      write(`opening ${target}${target === 'resume' ? '.pdf' : '/'}…`, 'shell-success');
+      window.setTimeout(() => window.location.assign(route), 220);
+      return true;
+    };
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const raw = input.value.trim();
+      if (!raw) return;
+      history.push(raw);
+      historyIndex = history.length;
+      write(`pawan@singapore:~/pawan$ ${raw}`, 'shell-command');
+      input.value = '';
+
+      const [command = '', rawTarget = ''] = raw.toLowerCase().split(/\s+/);
+      const target = rawTarget.replace(/\.(md|pdf|json)$/, '').replace(/\/$/, '');
+
+      if (command === 'clear') {
+        output.replaceChildren();
+      } else if (command === 'help') {
+        write('help · ls [folder] · cd <folder> · cat <file> · open <file> · pwd · whoami · history · clear');
+      } else if (command === 'pwd') {
+        write('/home/pawan/portfolio');
+      } else if (command === 'whoami') {
+        write('Pawan Patil — backend software engineer in Singapore.');
+      } else if (command === 'history') {
+        history.forEach((item, index) => write(`${index + 1}  ${item}`));
+      } else if (command === 'ls') {
+        if (!target) write('about.md  now.md  experience/  projects/  writing/  resume.pdf  contact.json');
+        else if (target === 'resume') navigate('resume');
+        else if (target === 'projects') write(projects.map((project) => `${project}/`).join('  '));
+        else if (target === 'experience') write('venti/  nus/');
+        else if (target === 'writing' || target === 'blog') write('(empty — check back soon)');
+        else write(`ls: ${rawTarget}: no such file or directory`, 'shell-error');
+      } else if (command === 'cat') {
+        if (target === 'about') write('Backend engineer building real-time data systems and developer tools at Venti.');
+        else if (target === 'now') write('Learning more about event-driven systems, storage engines, and operable production software.');
+        else if (target === 'contact') navigate('contact');
+        else write(`cat: ${rawTarget || 'missing file operand'}: cannot read`, 'shell-error');
+      } else if (command === 'cd' || command === 'open') {
+        if (!target) write(command === 'cd' ? '/home/pawan/portfolio' : 'open: missing target');
+        else if (!navigate(target)) write(`${command}: ${rawTarget}: no such destination`, 'shell-error');
+      } else {
+        write(`${command}: command not found. Type “help”.`, 'shell-error');
+      }
+    });
+
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+        event.preventDefault();
+        const step = event.key === 'ArrowUp' ? -1 : 1;
+        historyIndex = Math.max(0, Math.min(history.length, historyIndex + step));
+        input.value = history[historyIndex] || '';
+      }
+
+      if (event.key === 'Tab') {
+        event.preventDefault();
+        const parts = input.value.trimStart().split(/\s+/);
+        const candidates = parts.length <= 1 ? commands : targets;
+        const fragment = parts.at(-1)?.toLowerCase() || '';
+        const matches = candidates.filter((candidate) => candidate.startsWith(fragment));
+        if (matches.length === 1) {
+          parts[parts.length - 1] = matches[0];
+          input.value = `${parts.join(' ')}${parts.length === 1 ? ' ' : ''}`;
+        } else if (matches.length > 1) {
+          write(matches.join('  '));
+        }
+      }
+    });
+
+    shell.addEventListener('click', () => input.focus());
+  }
+</script>
+
+<style>
+  .filesystem {
+    --tree-line: rgba(148, 154, 142, 0.24);
+    margin-bottom: 2rem;
+  }
+
+  .filesystem-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .eyebrow {
+    margin: 0 0 0.35rem;
+    color: var(--faint);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .filesystem-heading h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .filesystem-note {
+    margin: 0;
+    color: var(--faint);
+    font-family: var(--sans);
+    font-size: 0.72rem;
+  }
+
+  .directory-group { margin-top: 2.35rem; }
+
+  .group-heading {
+    display: grid;
+    grid-template-columns: 2.4rem auto 1fr;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .group-heading::after { content: ''; height: 1px; background: var(--line); }
+  .group-heading span { color: var(--faint); font-size: 0.59rem; letter-spacing: 0.12em; }
+  .group-heading h3 { margin: 0; color: var(--faint); font-size: 0.62rem; letter-spacing: 0.17em; text-transform: uppercase; }
+
+  .tree {
+    position: relative;
+    margin-left: 0.7rem;
+    padding-left: 1.75rem;
+  }
+
+  .tree::before {
+    content: '';
+    position: absolute;
+    inset: 0.15rem auto 0.95rem 0;
+    width: 1px;
+    background: var(--tree-line);
+  }
+
+  .tree-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(190px, 0.9fr) minmax(0, 1.2fr);
+    align-items: center;
+    gap: 1.4rem;
+    min-height: 2.65rem;
+    padding: 0.27rem 0.45rem 0.27rem 0;
+    border-radius: 7px;
+    color: inherit;
+    transition: background 160ms ease, transform 160ms ease;
+  }
+
+  .tree-row::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 0.05rem);
+    width: 1.7rem;
+    height: 1px;
+    background: var(--tree-line);
+  }
+
+  a.tree-row:hover {
+    background: rgba(255, 255, 255, 0.035);
+    text-decoration: none;
+    transform: translateX(3px);
+  }
+
+  .tree-entry { display: flex; align-items: center; gap: 0.65rem; min-width: 0; font-size: 0.76rem; }
+  .entry-description { overflow: hidden; color: var(--faint); font-family: var(--sans); font-size: 0.72rem; line-height: 1.45; text-overflow: ellipsis; white-space: nowrap; }
+  .entry-chip { padding: 0.13rem 0.48rem; border: 1px solid; border-radius: 5px; font-weight: 500; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.22); }
+  .chip-mint { border-color: #557a69; background: rgba(86, 153, 119, 0.17); color: #b2d8c2; }
+  .chip-stone { border-color: #555952; background: rgba(112, 117, 107, 0.12); color: #c3c6bd; }
+  .chip-amber { border-color: #806743; background: rgba(182, 132, 62, 0.14); color: #dfbf8d; }
+  .chip-violet { border-color: #655988; background: rgba(115, 91, 171, 0.16); color: #c4b5ed; }
+  .chip-blue { border-color: #4b6982; background: rgba(65, 120, 165, 0.17); color: #acd0e9; }
+  .chip-teal { border-color: #47786f; background: rgba(55, 139, 124, 0.14); color: #a9d8cf; }
+  .chip-coral { border-color: #845c51; background: rgba(175, 91, 70, 0.13); color: #e0b1a4; }
+
+  .nested { margin-left: 2rem; width: calc(100% - 2rem); }
+  .nested::after {
+    content: '';
+    position: absolute;
+    top: -0.85rem;
+    right: calc(100% + 1.95rem);
+    width: 1px;
+    height: 2.2rem;
+    background: var(--tree-line);
+  }
+
+  .folder-icon {
+    position: relative;
+    display: inline-block;
+    width: 1.05rem;
+    height: 0.72rem;
+    border-radius: 2px;
+    background: #d2d0c5;
+  }
+
+  .folder-icon::before {
+    content: '';
+    position: absolute;
+    bottom: 80%;
+    left: 0.08rem;
+    width: 0.43rem;
+    height: 0.2rem;
+    border-radius: 2px 2px 0 0;
+    background: inherit;
+  }
+
+  .folder-icon.small { width: 0.82rem; height: 0.57rem; background: #9385c5; }
+  .folder-icon.blue { background: #6497bc; }
+  .folder-icon.teal { background: #68a99d; }
+
+  .file-icon {
+    position: relative;
+    display: inline-block;
+    flex: 0 0 auto;
+    width: 0.65rem;
+    height: 0.82rem;
+    border: 1px solid #767a72;
+    border-radius: 1px;
+  }
+
+  .file-icon::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    width: 0.24rem;
+    height: 0.24rem;
+    border-bottom: 1px solid #767a72;
+    border-left: 1px solid #767a72;
+    background: var(--background);
+  }
+
+  .shell {
+    margin-top: 3.5rem;
+    overflow: hidden;
+    border: 1px solid #41453e;
+    border-radius: 10px;
+    background: rgba(12, 14, 12, 0.76);
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.22), inset 0 1px rgba(255, 255, 255, 0.025);
+    backdrop-filter: blur(13px);
+    -webkit-backdrop-filter: blur(13px);
+  }
+
+  .shell-bar {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.65rem 0.85rem;
+    border-bottom: 1px solid #2c302b;
+    color: var(--faint);
+    font-size: 0.59rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .shell-bar span:first-child { display: flex; align-items: center; gap: 0.45rem; }
+  .shell-bar i { width: 0.42rem; height: 0.42rem; border-radius: 50%; background: #78a98c; box-shadow: 0 0 10px rgba(120, 169, 140, 0.55); }
+  .shell-output { min-height: 5.25rem; max-height: 12rem; overflow-y: auto; padding: 0.9rem 0.95rem 0.25rem; }
+  .shell-output :global(p) { margin: 0 0 0.3rem; color: #90958b; font-size: 0.68rem; line-height: 1.55; overflow-wrap: anywhere; }
+  .shell-output :global(b) { color: #bdc9b9; font-weight: 500; }
+  .shell-output :global(.shell-command) { color: #c2c5bc; }
+  .shell-output :global(.shell-success) { color: #92bea4; }
+  .shell-output :global(.shell-error) { color: #d69b8c; }
+
+  .shell-prompt {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.7rem 0.95rem 0.5rem;
+    color: #aab9d1;
+    font-size: 0.72rem;
+  }
+
+  .shell-prompt input {
+    min-width: 0;
+    flex: 1;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text);
+    caret-color: #b7c4b4;
+    font: inherit;
+  }
+
+  .shell-prompt:focus-within { color: #c1d1e8; }
+  .shell-hint { margin: 0; padding: 0 0.95rem 0.85rem; color: #53574f; font-size: 0.58rem; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+  @media (max-width: 620px) {
+    .filesystem-heading { align-items: start; flex-direction: column; gap: 0.45rem; }
+    .tree-row { grid-template-columns: 1fr; gap: 0.1rem; padding-block: 0.45rem; }
+    .entry-description { padding-left: 1.48rem; white-space: normal; }
+    .nested { margin-left: 1rem; width: calc(100% - 1rem); }
+    .project-row .entry-description { display: none; }
+    .shell-prompt { align-items: flex-start; flex-wrap: wrap; }
+    .shell-prompt input { flex-basis: 100%; padding-left: 0.1rem; }
+    .shell-bar span:last-child { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tree-row { transition: none; }
+  }
+</style>

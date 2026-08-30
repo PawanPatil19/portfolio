@@ -1,6 +1,7 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PortfolioDirectory from '../components/PortfolioDirectory.astro';
 import SingaporeSignal from '../components/SingaporeSignal.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
@@ -26,38 +27,8 @@ const projects = (await getCollection('projects'))
       I like reliable software, clear abstractions, and understanding why systems behave the way they do.
       This site is where I keep my projects and notes from the things I learn along the way.
     </p>
-    <p class="inline-links">
-      <a href="mailto:pawanpatil663@gmail.com">[Email]</a>
-      <a href="https://github.com/PawanPatil19" target="_blank" rel="noreferrer">[GitHub]</a>
-      <a href="https://www.linkedin.com/in/pawan-kishor-patil/" target="_blank" rel="noreferrer">[LinkedIn]</a>
-      <a href="/Pawan_Resume_Backend_Software_Engineer.pdf" target="_blank">[Resume]</a>
-    </p>
     <SingaporeSignal />
   </section>
 
-  <section class="content-section">
-    <div class="section-title-row">
-      <h2>Selected projects</h2>
-      <a href="/projects">All projects →</a>
-    </div>
-    <div class="simple-list project-list-home">
-      {projects.map((project: CollectionEntry<'projects'>) => (
-        <article class="simple-list-item">
-          <span class="list-marker">{project.data.stack[0]}</span>
-          <div>
-            <h3><a href={`/projects/${project.id}/`}>{project.data.title}</a></h3>
-            <p>{project.data.description}</p>
-          </div>
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <section class="content-section note-section">
-    <h2>Currently</h2>
-    <p>
-      Working from Singapore, learning more about event-driven systems, storage engines, and the small
-      engineering decisions that make production software easier to operate.
-    </p>
-  </section>
+  <PortfolioDirectory projects={projects} />
 </BaseLayout>
