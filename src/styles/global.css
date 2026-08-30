@@ -110,14 +110,18 @@ main { min-height: calc(100vh - 190px); padding: 6rem 0 7rem; }
 
 .intro { margin-bottom: 5rem; }
 
-.intro h1 { max-width: 620px; margin-bottom: 1.6rem; }
-
 .intro > p:not(.quiet-code):not(.inline-links) {
   max-width: 650px;
   color: var(--muted);
   font-family: var(--sans);
   font-size: 0.98rem;
   line-height: 1.8;
+}
+
+.intro > .intro-summary {
+  margin-bottom: 0;
+  font-size: 1rem;
+  line-height: 1.75;
 }
 
 .quiet-code {
