@@ -2,7 +2,6 @@
 import { type CollectionEntry, getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PortfolioDirectory from '../components/PortfolioDirectory.astro';
-import SingaporeSignal from '../components/SingaporeSignal.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 const projects = (await getCollection('projects'))
@@ -18,11 +17,10 @@ const projects = (await getCollection('projects'))
   <section class="intro">
     <p class="quiet-code">pawan@singapore:~$ whoami<span class="typing-cursor" aria-hidden="true"></span></p>
     <p class="intro-summary">
-      Pawan Patil — a backend software engineer at
+      I’m Pawan, a backend software engineer at
       <a href="https://www.linkedin.com/company/ventitechnologies/posts/?feedView=all" target="_blank" rel="noreferrer">Venti</a>,
       building real-time data systems and developer tools for autonomous vehicles.
     </p>
-    <SingaporeSignal />
   </section>
 
   <PortfolioDirectory projects={projects} />

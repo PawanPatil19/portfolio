@@ -1,67 +1,41 @@
-<aside class="singapore-signal" data-singapore-signal aria-label="Live Singapore time">
-  <div class="signal-meta">
-    <span>Singapore · live atmosphere</span>
-    <span class="signal-actions">
-      <time data-signal-time>SGT</time>
-      <button
-        class="observatory-toggle"
-        type="button"
-        data-observatory-open
-        aria-controls="night-observatory"
-        aria-expanded="false"
-        aria-label="Open night observatory"
-      >
-        <span class="telescope-icon" aria-hidden="true">
-          <i class="telescope-tube"></i>
-          <i class="telescope-mount"></i>
-          <i class="telescope-legs"></i>
-        </span>
-        <span>observe</span>
-      </button>
-    </span>
-  </div>
-  <p class="signal-caption" data-signal-caption>local time, rendered as atmosphere</p>
-</aside>
+<button
+  class="observatory-toggle"
+  type="button"
+  data-observatory-open
+  aria-controls="night-observatory"
+  aria-expanded="false"
+  aria-label="Open night observatory"
+  title="Open night observatory"
+>
+  <span class="telescope-icon" aria-hidden="true">
+    <i class="telescope-tube"></i>
+    <i class="telescope-mount"></i>
+    <i class="telescope-legs"></i>
+  </span>
+</button>
 
 <style>
-  .singapore-signal {
-    margin-top: 3.5rem;
-    padding-top: 0.8rem;
-    border-top: 1px solid color-mix(in srgb, var(--line), transparent 25%);
-  }
-
-  .signal-meta {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    color: var(--faint);
-    font-size: 0.62rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  .signal-actions {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
   .observatory-toggle {
+    position: fixed;
+    right: 1.35rem;
+    bottom: 1.35rem;
+    z-index: 8;
     display: flex;
     align-items: center;
-    gap: 0.35rem;
+    justify-content: center;
+    width: 2.7rem;
+    height: 2.7rem;
     padding: 0;
-    border: 0;
-    background: transparent;
+    border: 1px solid rgba(159, 181, 219, 0.24);
+    border-radius: 50%;
+    background: rgba(16, 17, 15, 0.52);
     color: var(--link);
-    font: inherit;
-    font-size: inherit;
-    letter-spacing: inherit;
-    text-transform: inherit;
     cursor: pointer;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 1.2s ease, color 180ms ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: opacity 1.2s ease, color 180ms ease, border-color 180ms ease, transform 180ms ease;
   }
 
   :global(html[data-sky='night']) .observatory-toggle {
@@ -70,7 +44,11 @@
   }
 
   .observatory-toggle:hover,
-  .observatory-toggle:focus-visible { color: var(--text); }
+  .observatory-toggle:focus-visible {
+    border-color: rgba(159, 181, 219, 0.58);
+    color: var(--text);
+    transform: translateY(-2px);
+  }
 
   .observatory-toggle:focus-visible {
     outline: 1px solid var(--link);
@@ -139,17 +117,6 @@
     content: '';
     transform: rotate(-40deg);
     transform-origin: top;
-  }
-
-  .signal-caption {
-    margin: 0.2rem 0 0;
-    color: var(--faint);
-    font-size: 0.64rem;
-  }
-
-  @media (max-width: 440px) {
-    .signal-actions { gap: 0.65rem; }
-    .observatory-toggle > span:last-child { display: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
