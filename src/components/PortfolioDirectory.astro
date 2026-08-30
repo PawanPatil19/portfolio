@@ -11,86 +11,79 @@ const shellProjects = projects.map((project) => project.id);
 
 <section class="filesystem" aria-labelledby="filesystem-title" data-shell-projects={JSON.stringify(shellProjects)}>
   <div class="filesystem-heading">
-    <div>
-      <p class="eyebrow">~/portfolio</p>
-      <h2 id="filesystem-title"><span class="folder-icon" aria-hidden="true"></span>pawan/</h2>
-    </div>
-    <p class="filesystem-note">A small filesystem of my work and life.</p>
+    <h2 id="filesystem-title"><span class="folder-icon" aria-hidden="true"></span>pawan/</h2>
+    <p class="filesystem-note">an index of my work and interests</p>
   </div>
 
   <div class="directory-group">
-    <div class="group-heading"><span>01</span><h3>identity</h3></div>
+    <div class="group-heading"><span class="folder-icon small" aria-hidden="true"></span><h3>profile/</h3></div>
     <div class="tree">
-      <a class="tree-row" href="/" aria-label="About Pawan">
-        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span class="entry-chip chip-mint">about.md</span></span>
-        <span class="entry-description">backend engineer, based in Singapore</span>
-      </a>
       <div class="tree-row">
-        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span class="entry-chip chip-stone">now.md</span></span>
+        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span class="entry-name">about.md</span></span>
+        <span class="entry-description">backend engineer, based in Singapore</span>
+      </div>
+      <div class="tree-row">
+        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span class="entry-name">now.md</span></span>
         <span class="entry-description">building reliable real-time systems</span>
       </div>
       <a class="tree-row" href="/Pawan_Resume_Backend_Software_Engineer.pdf" target="_blank">
-        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span class="entry-chip chip-amber">resume.pdf</span></span>
-        <span class="entry-description">experience, skills, and education <span aria-hidden="true">↗</span></span>
+        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span class="entry-name">resume.pdf</span></span>
+        <span class="entry-description">experience, skills, and education</span><span class="entry-arrow" aria-hidden="true">↗</span>
       </a>
     </div>
   </div>
 
   <div class="directory-group">
-    <div class="group-heading"><span>02</span><h3>work</h3></div>
+    <div class="group-heading"><span class="folder-icon small" aria-hidden="true"></span><h3>experience/</h3></div>
     <div class="tree">
       <a class="tree-row" href="/experience">
-        <span class="tree-entry"><span class="folder-icon small" aria-hidden="true"></span><span class="entry-chip chip-violet">experience/</span></span>
-        <span class="entry-description">the systems I have helped build</span>
+        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span class="entry-name">venti.md</span></span>
+        <span class="entry-description">infrastructure for autonomous vehicles</span><span class="entry-arrow" aria-hidden="true">→</span>
       </a>
-      <a class="tree-row nested" href="/experience">
-        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span>venti/</span></span>
-        <span class="entry-description">infrastructure for autonomous vehicles</span>
-      </a>
-      <a class="tree-row nested" href="/experience">
-        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span>nus/</span></span>
+      <a class="tree-row" href="/experience">
+        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span class="entry-name">nus.md</span></span>
         <span class="entry-description">robotics, vision, and real-time software</span>
+        <span class="entry-arrow" aria-hidden="true">→</span>
       </a>
     </div>
   </div>
 
   <div class="directory-group">
-    <div class="group-heading"><span>03</span><h3>selected work</h3></div>
+    <div class="group-heading"><span class="folder-icon small" aria-hidden="true"></span><h3>projects/</h3><a class="group-link" href="/projects">view all →</a></div>
     <div class="tree">
-      <a class="tree-row" href="/projects">
-        <span class="tree-entry"><span class="folder-icon small blue" aria-hidden="true"></span><span class="entry-chip chip-blue">projects/</span></span>
-        <span class="entry-description">experiments, tools, and shipped software</span>
-      </a>
       {projects.map((project) => (
-        <a class="tree-row nested project-row" href={`/projects/${project.id}/`}>
-          <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span>{project.id}/</span></span>
+        <a class="tree-row project-row" href={`/projects/${project.id}/`}>
+          <span class="tree-entry"><span class="folder-icon small" aria-hidden="true"></span><span class="entry-name">{project.data.title}</span></span>
           <span class="entry-description">{project.data.description}</span>
+          <span class="entry-arrow" aria-hidden="true">→</span>
         </a>
       ))}
     </div>
   </div>
 
   <div class="directory-group">
-    <div class="group-heading"><span>04</span><h3>edges</h3></div>
+    <div class="group-heading"><span class="folder-icon small" aria-hidden="true"></span><h3>elsewhere/</h3></div>
     <div class="tree">
       <a class="tree-row" href="/blog">
-        <span class="tree-entry"><span class="folder-icon small teal" aria-hidden="true"></span><span class="entry-chip chip-teal">writing/</span></span>
+        <span class="tree-entry"><span class="folder-icon small" aria-hidden="true"></span><span class="entry-name">writing/</span></span>
         <span class="entry-description">empty for now — stories will live here</span>
+        <span class="entry-arrow" aria-hidden="true">→</span>
       </a>
       <a class="tree-row" href="/contact">
-        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span class="entry-chip chip-coral">contact.json</span></span>
+        <span class="tree-entry"><span class="file-icon" aria-hidden="true"></span><span class="entry-name">contact.json</span></span>
         <span class="entry-description">GitHub, LinkedIn, X, and email</span>
+        <span class="entry-arrow" aria-hidden="true">→</span>
       </a>
     </div>
   </div>
 
   <div class="shell" data-shell>
     <div class="shell-bar">
-      <span><i aria-hidden="true"></i>interactive shell</span>
-      <span>Singapore · online</span>
+      <span>terminal</span>
+      <span>type “help” for commands</span>
     </div>
     <div class="shell-output" data-shell-output aria-live="polite">
-      <p>portfolio mounted. Type <b>help</b> or try <b>ls</b>.</p>
+      <p>portfolio mounted — try <b>ls</b> or <b>ls resume</b></p>
     </div>
     <form class="shell-prompt" data-shell-form autocomplete="off">
       <label class="sr-only" for="portfolio-command">Portfolio command</label>
@@ -211,67 +204,58 @@ const shellProjects = projects.map((project) => project.id);
 
 <style>
   .filesystem {
-    --tree-line: rgba(148, 154, 142, 0.24);
+    --tree-line: color-mix(in srgb, var(--line), transparent 12%);
     margin-bottom: 2rem;
   }
 
   .filesystem-heading {
     display: flex;
-    align-items: end;
+    align-items: baseline;
     justify-content: space-between;
     gap: 2rem;
-    padding-bottom: 1.2rem;
+    padding-bottom: 0.85rem;
     border-bottom: 1px solid var(--line);
-  }
-
-  .eyebrow {
-    margin: 0 0 0.35rem;
-    color: var(--faint);
-    font-size: 0.66rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
   }
 
   .filesystem-heading h2 {
     display: flex;
     align-items: center;
-    gap: 0.65rem;
+    gap: 0.6rem;
     margin: 0;
-    font-size: 1.15rem;
-    font-weight: 600;
+    font-size: 0.92rem;
+    font-weight: 500;
   }
 
   .filesystem-note {
     margin: 0;
     color: var(--faint);
     font-family: var(--sans);
-    font-size: 0.72rem;
+    font-size: 0.68rem;
   }
 
-  .directory-group { margin-top: 2.35rem; }
+  .directory-group { margin-top: 2rem; }
 
   .group-heading {
-    display: grid;
-    grid-template-columns: 2.4rem auto 1fr;
+    display: flex;
     align-items: center;
-    gap: 0.8rem;
-    margin-bottom: 0.8rem;
+    gap: 0.55rem;
+    min-height: 1.8rem;
+    margin-bottom: 0.45rem;
   }
 
-  .group-heading::after { content: ''; height: 1px; background: var(--line); }
-  .group-heading span { color: var(--faint); font-size: 0.59rem; letter-spacing: 0.12em; }
-  .group-heading h3 { margin: 0; color: var(--faint); font-size: 0.62rem; letter-spacing: 0.17em; text-transform: uppercase; }
+  .group-heading h3 { margin: 0; color: var(--text); font-size: 0.73rem; font-weight: 500; }
+  .group-link { margin-left: auto; color: var(--faint); font-size: 0.61rem; }
 
   .tree {
     position: relative;
-    margin-left: 0.7rem;
-    padding-left: 1.75rem;
+    margin-left: 0.39rem;
+    padding-left: 1.55rem;
   }
 
   .tree::before {
     content: '';
     position: absolute;
-    inset: 0.15rem auto 0.95rem 0;
+    inset: 0 auto 1.15rem 0;
     width: 1px;
     background: var(--tree-line);
   }
@@ -279,12 +263,12 @@ const shellProjects = projects.map((project) => project.id);
   .tree-row {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(190px, 0.9fr) minmax(0, 1.2fr);
+    grid-template-columns: minmax(180px, 0.8fr) minmax(0, 1.35fr) 1rem;
     align-items: center;
     gap: 1.4rem;
-    min-height: 2.65rem;
-    padding: 0.27rem 0.45rem 0.27rem 0;
-    border-radius: 7px;
+    min-height: 2.45rem;
+    padding: 0.28rem 0.35rem 0.28rem 0;
+    border-radius: 3px;
     color: inherit;
     transition: background 160ms ease, transform 160ms ease;
   }
@@ -294,46 +278,30 @@ const shellProjects = projects.map((project) => project.id);
     position: absolute;
     top: 50%;
     right: calc(100% + 0.05rem);
-    width: 1.7rem;
+    width: 1.5rem;
     height: 1px;
     background: var(--tree-line);
   }
 
   a.tree-row:hover {
-    background: rgba(255, 255, 255, 0.035);
+    background: color-mix(in srgb, var(--text) 3%, transparent);
     text-decoration: none;
     transform: translateX(3px);
   }
 
-  .tree-entry { display: flex; align-items: center; gap: 0.65rem; min-width: 0; font-size: 0.76rem; }
-  .entry-description { overflow: hidden; color: var(--faint); font-family: var(--sans); font-size: 0.72rem; line-height: 1.45; text-overflow: ellipsis; white-space: nowrap; }
-  .entry-chip { padding: 0.13rem 0.48rem; border: 1px solid; border-radius: 5px; font-weight: 500; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.22); }
-  .chip-mint { border-color: #557a69; background: rgba(86, 153, 119, 0.17); color: #b2d8c2; }
-  .chip-stone { border-color: #555952; background: rgba(112, 117, 107, 0.12); color: #c3c6bd; }
-  .chip-amber { border-color: #806743; background: rgba(182, 132, 62, 0.14); color: #dfbf8d; }
-  .chip-violet { border-color: #655988; background: rgba(115, 91, 171, 0.16); color: #c4b5ed; }
-  .chip-blue { border-color: #4b6982; background: rgba(65, 120, 165, 0.17); color: #acd0e9; }
-  .chip-teal { border-color: #47786f; background: rgba(55, 139, 124, 0.14); color: #a9d8cf; }
-  .chip-coral { border-color: #845c51; background: rgba(175, 91, 70, 0.13); color: #e0b1a4; }
-
-  .nested { margin-left: 2rem; width: calc(100% - 2rem); }
-  .nested::after {
-    content: '';
-    position: absolute;
-    top: -0.85rem;
-    right: calc(100% + 1.95rem);
-    width: 1px;
-    height: 2.2rem;
-    background: var(--tree-line);
-  }
+  .tree-entry { display: flex; align-items: center; gap: 0.6rem; min-width: 0; font-size: 0.73rem; }
+  .entry-name { overflow: hidden; color: var(--text); text-overflow: ellipsis; white-space: nowrap; }
+  .entry-description { overflow: hidden; color: var(--faint); font-family: var(--sans); font-size: 0.7rem; line-height: 1.45; text-overflow: ellipsis; white-space: nowrap; }
+  .entry-arrow { color: var(--faint); font-size: 0.65rem; opacity: 0; transform: translateX(-3px); transition: opacity 160ms ease, transform 160ms ease; }
+  a.tree-row:hover .entry-arrow, a.tree-row:focus-visible .entry-arrow { opacity: 1; transform: translateX(0); }
 
   .folder-icon {
     position: relative;
     display: inline-block;
-    width: 1.05rem;
-    height: 0.72rem;
+    width: 0.92rem;
+    height: 0.62rem;
     border-radius: 2px;
-    background: #d2d0c5;
+    background: var(--muted);
   }
 
   .folder-icon::before {
@@ -347,9 +315,7 @@ const shellProjects = projects.map((project) => project.id);
     background: inherit;
   }
 
-  .folder-icon.small { width: 0.82rem; height: 0.57rem; background: #9385c5; }
-  .folder-icon.blue { background: #6497bc; }
-  .folder-icon.teal { background: #68a99d; }
+  .folder-icon.small { width: 0.72rem; height: 0.49rem; background: var(--faint); }
 
   .file-icon {
     position: relative;
@@ -357,7 +323,7 @@ const shellProjects = projects.map((project) => project.id);
     flex: 0 0 auto;
     width: 0.65rem;
     height: 0.82rem;
-    border: 1px solid #767a72;
+    border: 1px solid var(--faint);
     border-radius: 1px;
   }
 
@@ -368,18 +334,17 @@ const shellProjects = projects.map((project) => project.id);
     right: -1px;
     width: 0.24rem;
     height: 0.24rem;
-    border-bottom: 1px solid #767a72;
-    border-left: 1px solid #767a72;
+    border-bottom: 1px solid var(--faint);
+    border-left: 1px solid var(--faint);
     background: var(--background);
   }
 
   .shell {
-    margin-top: 3.5rem;
+    margin-top: 3rem;
     overflow: hidden;
-    border: 1px solid #41453e;
-    border-radius: 10px;
-    background: rgba(12, 14, 12, 0.76);
-    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.22), inset 0 1px rgba(255, 255, 255, 0.025);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--background) 80%, transparent);
     backdrop-filter: blur(13px);
     -webkit-backdrop-filter: blur(13px);
   }
@@ -388,29 +353,26 @@ const shellProjects = projects.map((project) => project.id);
     display: flex;
     justify-content: space-between;
     gap: 1rem;
-    padding: 0.65rem 0.85rem;
-    border-bottom: 1px solid #2c302b;
+    padding: 0.58rem 0.8rem;
+    border-bottom: 1px solid var(--line);
     color: var(--faint);
     font-size: 0.59rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 
-  .shell-bar span:first-child { display: flex; align-items: center; gap: 0.45rem; }
-  .shell-bar i { width: 0.42rem; height: 0.42rem; border-radius: 50%; background: #78a98c; box-shadow: 0 0 10px rgba(120, 169, 140, 0.55); }
-  .shell-output { min-height: 5.25rem; max-height: 12rem; overflow-y: auto; padding: 0.9rem 0.95rem 0.25rem; }
-  .shell-output :global(p) { margin: 0 0 0.3rem; color: #90958b; font-size: 0.68rem; line-height: 1.55; overflow-wrap: anywhere; }
-  .shell-output :global(b) { color: #bdc9b9; font-weight: 500; }
-  .shell-output :global(.shell-command) { color: #c2c5bc; }
-  .shell-output :global(.shell-success) { color: #92bea4; }
-  .shell-output :global(.shell-error) { color: #d69b8c; }
+  .shell-output { min-height: 4.5rem; max-height: 12rem; overflow-y: auto; padding: 0.78rem 0.85rem 0.18rem; }
+  .shell-output :global(p) { margin: 0 0 0.3rem; color: var(--muted); font-size: 0.66rem; line-height: 1.55; overflow-wrap: anywhere; }
+  .shell-output :global(b) { color: var(--text); font-weight: 500; }
+  .shell-output :global(.shell-command), .shell-output :global(.shell-success) { color: var(--text); }
+  .shell-output :global(.shell-error) { color: var(--muted); text-decoration: underline; text-decoration-style: dotted; }
 
   .shell-prompt {
     display: flex;
     align-items: center;
     gap: 0.55rem;
-    padding: 0.7rem 0.95rem 0.5rem;
-    color: #aab9d1;
+    padding: 0.65rem 0.85rem 0.45rem;
+    color: var(--muted);
     font-size: 0.72rem;
   }
 
@@ -422,19 +384,20 @@ const shellProjects = projects.map((project) => project.id);
     outline: 0;
     background: transparent;
     color: var(--text);
-    caret-color: #b7c4b4;
+    caret-color: var(--text);
     font: inherit;
   }
 
-  .shell-prompt:focus-within { color: #c1d1e8; }
-  .shell-hint { margin: 0; padding: 0 0.95rem 0.85rem; color: #53574f; font-size: 0.58rem; }
+  .shell-prompt:focus-within { color: var(--text); }
+  .shell-hint { margin: 0; padding: 0 0.85rem 0.75rem; color: var(--faint); font-size: 0.56rem; }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
   @media (max-width: 620px) {
     .filesystem-heading { align-items: start; flex-direction: column; gap: 0.45rem; }
-    .tree-row { grid-template-columns: 1fr; gap: 0.1rem; padding-block: 0.45rem; }
+    .tree-row { grid-template-columns: minmax(0, 1fr) 1rem; gap: 0.1rem; padding-block: 0.45rem; }
     .entry-description { padding-left: 1.48rem; white-space: normal; }
-    .nested { margin-left: 1rem; width: calc(100% - 1rem); }
+    .tree-row .entry-description { grid-column: 1; }
+    .entry-arrow { grid-column: 2; grid-row: 1; opacity: 1; }
     .project-row .entry-description { display: none; }
     .shell-prompt { align-items: flex-start; flex-wrap: wrap; }
     .shell-prompt input { flex-basis: 100%; padding-left: 0.1rem; }
